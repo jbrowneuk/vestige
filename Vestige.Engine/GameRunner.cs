@@ -16,6 +16,7 @@ namespace Vestige.Engine
         private KeyboardHandler keyboardHandler;
         private readonly OverworldObject player;
         private readonly AnimatedObject testAnim;
+        private readonly TileSystem tileSystem;
 
         public GameRunner()
         {
@@ -25,6 +26,8 @@ namespace Vestige.Engine
             keyboardHandler = new KeyboardHandler();
             player = new OverworldObject();
             testAnim = new AnimatedObject();
+            tileSystem = new TileSystem();
+
             player.Sprite = testAnim;
         }
 
@@ -37,6 +40,26 @@ namespace Vestige.Engine
         protected override void Initialize()
         {
             base.Initialize();
+            tileSystem.Initialize(0, 0, 4, 4);
+            tileSystem.AddTile(0, 10);
+            tileSystem.AddTile(1, 11);
+            tileSystem.AddTile(2, 11);
+            tileSystem.AddTile(3, 12);
+
+            tileSystem.AddTile(4, 7);
+            tileSystem.AddTile(5, 8);
+            tileSystem.AddTile(6, 8);
+            tileSystem.AddTile(7, 9);
+
+            tileSystem.AddTile(8, 4);
+            tileSystem.AddTile(9, 5);
+            tileSystem.AddTile(10, 5);
+            tileSystem.AddTile(11, 6);
+
+            tileSystem.AddTile(12, 1);
+            tileSystem.AddTile(13, 2);
+            tileSystem.AddTile(14, 2);
+            tileSystem.AddTile(15, 3);
         }
 
         /// <summary>
@@ -48,6 +71,7 @@ namespace Vestige.Engine
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
             testAnim.SpriteSheet = Content.Load<Texture2D>(@"Images/char-f");
+            tileSystem.SpriteSheet = Content.Load<Texture2D>(@"Images/outdoor");
         }
 
         /// <summary>
@@ -112,6 +136,7 @@ namespace Vestige.Engine
             graphics.GraphicsDevice.Clear(Color.White);
 
             spriteBatch.Begin();
+            tileSystem.Draw(spriteBatch);
             testAnim.Draw(spriteBatch);
             spriteBatch.End();
 
