@@ -13,6 +13,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Input\KeyboardHandler.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\OverworldObject.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\AnimatedObject.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\TileSystem.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="$(MSBuildThisFileDirectory)Content\" />
