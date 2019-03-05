@@ -4,12 +4,10 @@ using System.Runtime.CompilerServices;
 // Information about this assembly is defined by the following attributes. 
 // Change them to the values specific to your project.
 
-[assembly: AssemblyTitle("Vestige.MacOS")]
-[assembly: AssemblyDescription("Vestige Mac OS Runner")]
-[assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("")]
-[assembly: AssemblyCopyright("")]
+[assembly: AssemblyTitle("Vestige")]
+[assembly: AssemblyDescription("Vestige Game Shell")]
+[assembly: AssemblyProduct("Vestige Game Engine")]
+[assembly: AssemblyCopyright("Copyright © Jason B 2018")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
