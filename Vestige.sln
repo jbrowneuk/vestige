@@ -1,11 +1,18 @@
-
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
+VisualStudioVersion = 15.0.28307.421
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Vestige.MacOS", "Vestige\Vestige.MacOS.csproj", "{3A23AA06-840E-4419-9CA5-6CA6A633EB1F}"
 EndProject
 Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Vestige.Engine", "Vestige.Engine\Vestige.Engine.shproj", "{A0CDBD0E-3A41-42B7-9425-A838BC2C7383}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Vestige.Windows", "Vestige\Vestige.Windows.csproj", "{C957E94B-244D-4631-B62D-72FCD924BB87}"
+EndProject
 Global
+	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		Vestige.Engine\Vestige.Engine.projitems*{a0cdbd0e-3a41-42b7-9425-a838bc2c7383}*SharedItemsImports = 13
+		Vestige.Engine\Vestige.Engine.projitems*{c957e94b-244d-4631-b62d-72fcd924bb87}*SharedItemsImports = 4
+	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x86 = Debug|x86
 		Release|x86 = Release|x86
@@ -15,5 +22,15 @@ Global
 		{3A23AA06-840E-4419-9CA5-6CA6A633EB1F}.Debug|x86.Build.0 = Debug|x86
 		{3A23AA06-840E-4419-9CA5-6CA6A633EB1F}.Release|x86.ActiveCfg = Release|x86
 		{3A23AA06-840E-4419-9CA5-6CA6A633EB1F}.Release|x86.Build.0 = Release|x86
+		{C957E94B-244D-4631-B62D-72FCD924BB87}.Debug|x86.ActiveCfg = Debug|x86
+		{C957E94B-244D-4631-B62D-72FCD924BB87}.Debug|x86.Build.0 = Debug|x86
+		{C957E94B-244D-4631-B62D-72FCD924BB87}.Release|x86.ActiveCfg = Release|x86
+		{C957E94B-244D-4631-B62D-72FCD924BB87}.Release|x86.Build.0 = Release|x86
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {74EEADCD-C36F-46B7-860A-188929145DE9}
 	EndGlobalSection
 EndGlobal

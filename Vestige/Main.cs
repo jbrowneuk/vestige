@@ -1,9 +1,10 @@
-﻿#region Using Statements
-using Vestige.Engine;
-using AppKit;
-#endregion
+﻿using Vestige.Engine;
 
-namespace Vestige.MacOS
+#if MACOS
+using AppKit;
+#endif
+
+namespace Vestige
 {
     static class Program
     {
@@ -12,7 +13,9 @@ namespace Vestige.MacOS
         /// </summary>
         static void Main(string[] args)
         {
+#if MACOS
             NSApplication.Init();
+#endif
 
             using (var game = new GameRunner())
             {
