@@ -15,8 +15,12 @@ namespace Vestige.Engine
         private SpriteBatch spriteBatch;
         private KeyboardHandler keyboardHandler;
         private readonly OverworldObject player;
-        private readonly AnimatedObject testAnim;
-        private readonly TileSystem tileSystem;
+        private readonly AnimatedObject playerSprite;
+
+        // Todo: there should probably be 2 below and 2 above the player to
+        // allow for complex structures to appear above and below
+        private readonly TileSystem lowerTileSystem;
+        private readonly TileSystem upperTileSystem;
 
         public GameRunner()
         {
@@ -25,10 +29,11 @@ namespace Vestige.Engine
 
             keyboardHandler = new KeyboardHandler();
             player = new OverworldObject();
-            testAnim = new AnimatedObject();
-            tileSystem = new TileSystem();
+            playerSprite = new AnimatedObject();
+            lowerTileSystem = new TileSystem();
+            upperTileSystem = new TileSystem();
 
-            player.Sprite = testAnim;
+            player.Sprite = playerSprite;
         }
 
         /// <summary>
@@ -40,26 +45,40 @@ namespace Vestige.Engine
         protected override void Initialize()
         {
             base.Initialize();
-            tileSystem.Initialize(0, 0, 4, 4);
-            tileSystem.AddTile(0, 10);
-            tileSystem.AddTile(1, 11);
-            tileSystem.AddTile(2, 11);
-            tileSystem.AddTile(3, 12);
+            lowerTileSystem.Initialize(24, 24, 4, 5);
 
-            tileSystem.AddTile(4, 7);
-            tileSystem.AddTile(5, 8);
-            tileSystem.AddTile(6, 8);
-            tileSystem.AddTile(7, 9);
+            lowerTileSystem.AddTile(0, 0, 9);
+            lowerTileSystem.AddTile(1, 0, 10);
+            lowerTileSystem.AddTile(2, 0, 10);
+            lowerTileSystem.AddTile(3, 0, 11);
 
-            tileSystem.AddTile(8, 4);
-            tileSystem.AddTile(9, 5);
-            tileSystem.AddTile(10, 5);
-            tileSystem.AddTile(11, 6);
+            lowerTileSystem.AddTile(0, 1, 6);
+            lowerTileSystem.AddTile(1, 1, 7);
+            lowerTileSystem.AddTile(2, 1, 7);
+            lowerTileSystem.AddTile(3, 1, 8);
 
-            tileSystem.AddTile(12, 1);
-            tileSystem.AddTile(13, 2);
-            tileSystem.AddTile(14, 2);
-            tileSystem.AddTile(15, 3);
+            lowerTileSystem.AddTile(0, 2, 6);
+            lowerTileSystem.AddTile(1, 2, 7);
+            lowerTileSystem.AddTile(2, 2, 7);
+            lowerTileSystem.AddTile(3, 2, 8);
+
+            lowerTileSystem.AddTile(0, 3, 3);
+            lowerTileSystem.AddTile(1, 3, 4);
+            lowerTileSystem.AddTile(2, 3, 4);
+            lowerTileSystem.AddTile(3, 3, 5);
+
+            lowerTileSystem.AddTile(0, 4, 0);
+            lowerTileSystem.AddTile(1, 4, 1);
+            lowerTileSystem.AddTile(2, 4, 1);
+            lowerTileSystem.AddTile(3, 4, 2);
+
+            upperTileSystem.Initialize(24, 24, 4, 5);
+
+            upperTileSystem.AddTile(1, 3, 13);
+            upperTileSystem.AddTile(2, 3, 13);
+
+            upperTileSystem.AddTile(1, 4, 12);
+            upperTileSystem.AddTile(2, 4, 13);
         }
 
         /// <summary>
@@ -70,8 +89,9 @@ namespace Vestige.Engine
         {
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
-            testAnim.SpriteSheet = Content.Load<Texture2D>(@"Images/char-f");
-            tileSystem.SpriteSheet = Content.Load<Texture2D>(@"Images/outdoor");
+            playerSprite.SpriteSheet = Content.Load<Texture2D>(@"Images/char-f");
+            lowerTileSystem.SpriteSheet = Content.Load<Texture2D>(@"Images/outdoor");
+            upperTileSystem.SpriteSheet = lowerTileSystem.SpriteSheet;
         }
 
         /// <summary>
@@ -108,21 +128,21 @@ namespace Vestige.Engine
             // TODO make this sensible and the class use more vars
             if (keyboardMovement.X < 0)
             {
-                testAnim.FrameOffset = 12;
+                playerSprite.FrameOffset = 12;
             }
             else if (keyboardMovement.X > 0)
             {
-                testAnim.FrameOffset = 4;
+                playerSprite.FrameOffset = 4;
             }
             else if (keyboardMovement.Y > 0)
             {
-                testAnim.FrameOffset = 8;
+                playerSprite.FrameOffset = 8;
             }
             else if (keyboardMovement.Y < 0)
             {
-                testAnim.FrameOffset = 0;
+                playerSprite.FrameOffset = 0;
             }
-            testAnim.Update(gameTime);
+            playerSprite.Update(gameTime);
 
             base.Update(gameTime);
         }
@@ -136,8 +156,9 @@ namespace Vestige.Engine
             graphics.GraphicsDevice.Clear(Color.White);
 
             spriteBatch.Begin();
-            tileSystem.Draw(spriteBatch);
-            testAnim.Draw(spriteBatch);
+            lowerTileSystem.Draw(spriteBatch);
+            upperTileSystem.Draw(spriteBatch);
+            playerSprite.Draw(spriteBatch);
             spriteBatch.End();
 
             base.Draw(gameTime);
