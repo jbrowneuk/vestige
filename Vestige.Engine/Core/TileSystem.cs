@@ -42,7 +42,7 @@ namespace Vestige.Engine.Core
                 return;
             }
 
-            if (x < 0 || x > gridWidth || y < 0 || y > gridHeight)
+            if (x < 0 || x >= gridWidth || y < 0 || y >= gridHeight)
             {
                 return;
             }
@@ -85,21 +85,9 @@ namespace Vestige.Engine.Core
 
         private Point GetTileSourcePosition(int tileId)
         {
-            const int tileSpacing = 1;
-
-            // Calculate usable area
-            int paddingX = (ImageWidth / gridSize) * tileSpacing;
-            int usableImageWidth = ImageWidth - paddingX;
-
-            // Calculate actual location
             Point location;
-            location.Y = tileId / (usableImageWidth / gridSize);
-            location.X = tileId - (location.Y * (usableImageWidth / gridSize));
-
-            // Calculate spacing
-            Point spacing;
-            spacing.X = location.X * tileSpacing;
-            spacing.Y = location.Y * tileSpacing;
+            location.Y = tileId / (ImageWidth / gridSize);
+            location.X = tileId - (location.Y * (ImageWidth / gridSize));
 
             // Multiply up for tile size
             location.X *= gridSize;
