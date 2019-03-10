@@ -1,4 +1,4 @@
-﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Vestige.Engine.Core;
@@ -45,40 +45,45 @@ namespace Vestige.Engine
         protected override void Initialize()
         {
             base.Initialize();
-            lowerTileSystem.Initialize(24, 24, 4, 5);
+            const int tsX = 36;
+            const int tsY = 36;
+            const int tsW = 8;
+            const int tsH = 8;
+            lowerTileSystem.Initialize(tsX, tsY, tsW, tsH);
+            upperTileSystem.Initialize(tsX, tsY, tsW, tsH);
 
-            lowerTileSystem.AddTile(0, 0, 9);
-            lowerTileSystem.AddTile(1, 0, 10);
-            lowerTileSystem.AddTile(2, 0, 10);
-            lowerTileSystem.AddTile(3, 0, 11);
+            lowerTileSystem.AddTile(0, 0, 0);
+            lowerTileSystem.AddTile(1, 0, 1);
+            lowerTileSystem.AddTile(2, 0, 1);
+            lowerTileSystem.AddTile(3, 0, 1);
+            lowerTileSystem.AddTile(4, 0, 2);
+            lowerTileSystem.AddTile(0, 1, 10);
+            lowerTileSystem.AddTile(1, 1, 11);
+            lowerTileSystem.AddTile(2, 1, 11);
+            lowerTileSystem.AddTile(3, 1, 11);
+            lowerTileSystem.AddTile(4, 1, 12);
+            lowerTileSystem.AddTile(0, 2, 10);
+            lowerTileSystem.AddTile(1, 2, 11);
+            lowerTileSystem.AddTile(2, 2, 11);
+            lowerTileSystem.AddTile(3, 2, 11);
+            lowerTileSystem.AddTile(4, 2, 12);
+            lowerTileSystem.AddTile(0, 3, 20);
+            lowerTileSystem.AddTile(1, 3, 21);
+            lowerTileSystem.AddTile(2, 3, 21);
+            lowerTileSystem.AddTile(3, 3, 21);
+            lowerTileSystem.AddTile(4, 3, 22);
+            lowerTileSystem.AddTile(0, 4, 30);
+            lowerTileSystem.AddTile(1, 4, 31);
+            lowerTileSystem.AddTile(2, 4, 31);
+            lowerTileSystem.AddTile(3, 4, 31);
+            lowerTileSystem.AddTile(4, 4, 32);
+            lowerTileSystem.AddTile(2, 5, 3);
 
-            lowerTileSystem.AddTile(0, 1, 6);
-            lowerTileSystem.AddTile(1, 1, 7);
-            lowerTileSystem.AddTile(2, 1, 7);
-            lowerTileSystem.AddTile(3, 1, 8);
-
-            lowerTileSystem.AddTile(0, 2, 6);
-            lowerTileSystem.AddTile(1, 2, 7);
-            lowerTileSystem.AddTile(2, 2, 7);
-            lowerTileSystem.AddTile(3, 2, 8);
-
-            lowerTileSystem.AddTile(0, 3, 3);
-            lowerTileSystem.AddTile(1, 3, 4);
-            lowerTileSystem.AddTile(2, 3, 4);
-            lowerTileSystem.AddTile(3, 3, 5);
-
-            lowerTileSystem.AddTile(0, 4, 0);
-            lowerTileSystem.AddTile(1, 4, 1);
-            lowerTileSystem.AddTile(2, 4, 1);
-            lowerTileSystem.AddTile(3, 4, 2);
-
-            upperTileSystem.Initialize(24, 24, 4, 5);
-
-            upperTileSystem.AddTile(1, 3, 13);
-            upperTileSystem.AddTile(2, 3, 13);
-
-            upperTileSystem.AddTile(1, 4, 12);
-            upperTileSystem.AddTile(2, 4, 13);
+            upperTileSystem.AddTile(1, 3, 23);
+            upperTileSystem.AddTile(3, 3, 23);
+            upperTileSystem.AddTile(1, 4, 23);
+            upperTileSystem.AddTile(2, 4, 33);
+            upperTileSystem.AddTile(3, 4, 23);
         }
 
         /// <summary>
