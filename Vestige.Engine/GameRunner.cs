@@ -26,6 +26,7 @@ namespace Vestige.Engine
             keyboardHandler = new KeyboardHandler();
             overworld = new Overworld();
             player = new OverworldObject();
+            player.DrawOffset = new Vector2(0, -8);
             playerSprite = new AnimatedObject();
             player.Sprite = playerSprite;
         }

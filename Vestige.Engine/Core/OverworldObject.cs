@@ -23,6 +23,8 @@ namespace Vestige.Engine.Core
 
         public AnimatedObject Sprite { get; set; } = null;
 
+        public Vector2 DrawOffset { get; set; } = Vector2.Zero;
+
         internal void Update(GameTime time)
         {
             if (startPosition != endPosition && movement < 1)
@@ -39,7 +41,7 @@ namespace Vestige.Engine.Core
 
             if (Sprite != null)
             {
-                Sprite.Position = currentPosition;
+                Sprite.Position = currentPosition + DrawOffset;
             }
         }
 
