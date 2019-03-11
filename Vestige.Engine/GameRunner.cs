@@ -40,7 +40,7 @@ namespace Vestige.Engine
         protected override void Initialize()
         {
             base.Initialize();
-            overworld.LoadLevel("any");
+            overworld.LoadLevel(Content.RootDirectory + "/Maps/town1.xml");
         }
 
         /// <summary>
