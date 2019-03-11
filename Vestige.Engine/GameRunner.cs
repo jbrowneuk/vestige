@@ -16,11 +16,7 @@ namespace Vestige.Engine
         private KeyboardHandler keyboardHandler;
         private readonly OverworldObject player;
         private readonly AnimatedObject playerSprite;
-
-        // Todo: there should probably be 2 below and 2 above the player to
-        // allow for complex structures to appear above and below
-        private readonly TileSystem lowerTileSystem;
-        private readonly TileSystem upperTileSystem;
+        private readonly Overworld overworld;
 
         public GameRunner()
         {
@@ -28,11 +24,9 @@ namespace Vestige.Engine
             Content.RootDirectory = "Content";
 
             keyboardHandler = new KeyboardHandler();
+            overworld = new Overworld();
             player = new OverworldObject();
             playerSprite = new AnimatedObject();
-            lowerTileSystem = new TileSystem();
-            upperTileSystem = new TileSystem();
-
             player.Sprite = playerSprite;
         }
 
@@ -45,45 +39,7 @@ namespace Vestige.Engine
         protected override void Initialize()
         {
             base.Initialize();
-            const int tsX = 36;
-            const int tsY = 36;
-            const int tsW = 8;
-            const int tsH = 8;
-            lowerTileSystem.Initialize(tsX, tsY, tsW, tsH);
-            upperTileSystem.Initialize(tsX, tsY, tsW, tsH);
-
-            lowerTileSystem.AddTile(0, 0, 0);
-            lowerTileSystem.AddTile(1, 0, 1);
-            lowerTileSystem.AddTile(2, 0, 1);
-            lowerTileSystem.AddTile(3, 0, 1);
-            lowerTileSystem.AddTile(4, 0, 2);
-            lowerTileSystem.AddTile(0, 1, 10);
-            lowerTileSystem.AddTile(1, 1, 11);
-            lowerTileSystem.AddTile(2, 1, 11);
-            lowerTileSystem.AddTile(3, 1, 11);
-            lowerTileSystem.AddTile(4, 1, 12);
-            lowerTileSystem.AddTile(0, 2, 10);
-            lowerTileSystem.AddTile(1, 2, 11);
-            lowerTileSystem.AddTile(2, 2, 11);
-            lowerTileSystem.AddTile(3, 2, 11);
-            lowerTileSystem.AddTile(4, 2, 12);
-            lowerTileSystem.AddTile(0, 3, 20);
-            lowerTileSystem.AddTile(1, 3, 21);
-            lowerTileSystem.AddTile(2, 3, 21);
-            lowerTileSystem.AddTile(3, 3, 21);
-            lowerTileSystem.AddTile(4, 3, 22);
-            lowerTileSystem.AddTile(0, 4, 30);
-            lowerTileSystem.AddTile(1, 4, 31);
-            lowerTileSystem.AddTile(2, 4, 31);
-            lowerTileSystem.AddTile(3, 4, 31);
-            lowerTileSystem.AddTile(4, 4, 32);
-            lowerTileSystem.AddTile(2, 5, 3);
-
-            upperTileSystem.AddTile(1, 3, 23);
-            upperTileSystem.AddTile(3, 3, 23);
-            upperTileSystem.AddTile(1, 4, 23);
-            upperTileSystem.AddTile(2, 4, 33);
-            upperTileSystem.AddTile(3, 4, 23);
+            overworld.LoadLevel("any");
         }
 
         /// <summary>
@@ -95,8 +51,7 @@ namespace Vestige.Engine
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
             playerSprite.SpriteSheet = Content.Load<Texture2D>(@"Images/char-f");
-            lowerTileSystem.SpriteSheet = Content.Load<Texture2D>(@"Images/outdoor");
-            upperTileSystem.SpriteSheet = lowerTileSystem.SpriteSheet;
+            overworld.UpdateTileSet(Content.Load<Texture2D>(@"Images/outdoor"));
         }
 
         /// <summary>
@@ -161,8 +116,7 @@ namespace Vestige.Engine
             graphics.GraphicsDevice.Clear(Color.White);
 
             spriteBatch.Begin();
-            lowerTileSystem.Draw(spriteBatch);
-            upperTileSystem.Draw(spriteBatch);
+            overworld.Draw(spriteBatch);
             playerSprite.Draw(spriteBatch);
             spriteBatch.End();
 
