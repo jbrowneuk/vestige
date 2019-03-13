@@ -14,5 +14,9 @@
 	<string>NSApplication</string>
 	<key>NSMainNibFile</key>
 	<string>MainMenu</string>
+	<key>LSApplicationCategoryType</key>
+	<string>public.app-category.role-playing-games</string>
+	<key>CFBundleShortVersionString</key>
+	<string>0.0.1</string>
 </dict>
 </plist>
