@@ -1,49 +1,85 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
-<Overworld left="24" top="24" width="8" height="8">
+<Overworld left="0" top="0" width="8" height="8">
     <TileLayers>
         <Layer type="Below">
-            <Tile x="0" y="0">0</Tile>
-            <Tile x="1" y="0">1</Tile>
+            <Tile x="0" y="0">8</Tile>
+            <Tile x="1" y="0">0</Tile>
             <Tile x="2" y="0">1</Tile>
             <Tile x="3" y="0">1</Tile>
-            <Tile x="4" y="0">2</Tile>
-            <Tile x="0" y="1">10</Tile>
-            <Tile x="1" y="1">11</Tile>
+            <Tile x="4" y="0">1</Tile>
+            <Tile x="5" y="0">2</Tile>
+            <Tile x="6" y="0">8</Tile>
+            <Tile x="7" y="0">8</Tile>
+            <Tile x="0" y="1">8</Tile>
+            <Tile x="1" y="1">10</Tile>
             <Tile x="2" y="1">11</Tile>
             <Tile x="3" y="1">11</Tile>
-            <Tile x="4" y="1">12</Tile>
-            <Tile x="0" y="2">10</Tile>
-            <Tile x="1" y="2">11</Tile>
+            <Tile x="4" y="1">11</Tile>
+            <Tile x="5" y="1">12</Tile>
+            <Tile x="6" y="1">8</Tile>
+            <Tile x="7" y="1">8</Tile>
+            <Tile x="0" y="2">8</Tile>
+            <Tile x="1" y="2">10</Tile>
             <Tile x="2" y="2">11</Tile>
             <Tile x="3" y="2">11</Tile>
-            <Tile x="4" y="2">12</Tile>
-            <Tile x="0" y="3">20</Tile>
-            <Tile x="1" y="3">21</Tile>
+            <Tile x="4" y="2">11</Tile>
+            <Tile x="5" y="2">12</Tile>
+            <Tile x="6" y="2">8</Tile>
+            <Tile x="7" y="2">8</Tile>
+            <Tile x="0" y="3">8</Tile>
+            <Tile x="1" y="3">20</Tile>
             <Tile x="2" y="3">21</Tile>
             <Tile x="3" y="3">21</Tile>
-            <Tile x="4" y="3">22</Tile>
-            <Tile x="0" y="4">30</Tile>
-            <Tile x="1" y="4">31</Tile>
+            <Tile x="4" y="3">21</Tile>
+            <Tile x="5" y="3">22</Tile>
+            <Tile x="6" y="3">8</Tile>
+            <Tile x="7" y="3">8</Tile>
+            <Tile x="0" y="4">8</Tile>
+            <Tile x="1" y="4">30</Tile>
             <Tile x="2" y="4">31</Tile>
             <Tile x="3" y="4">31</Tile>
-            <Tile x="4" y="4">32</Tile>
-            <Tile x="2" y="5">3</Tile>
-            <Tile x="2" y="6">3</Tile>
+            <Tile x="4" y="4">31</Tile>
+            <Tile x="5" y="4">32</Tile>
+            <Tile x="6" y="4">8</Tile>
+            <Tile x="7" y="4">8</Tile>
+            <Tile x="0" y="5">8</Tile>
+            <Tile x="1" y="5">8</Tile>
+            <Tile x="2" y="5">8</Tile>
+            <Tile x="3" y="5">3</Tile>
+            <Tile x="4" y="5">8</Tile>
+            <Tile x="5" y="5">8</Tile>
+            <Tile x="6" y="5">8</Tile>
+            <Tile x="7" y="5">8</Tile>
+            <Tile x="0" y="6">8</Tile>
+            <Tile x="1" y="6">8</Tile>
+            <Tile x="2" y="6">8</Tile>
             <Tile x="3" y="6">3</Tile>
             <Tile x="4" y="6">3</Tile>
             <Tile x="5" y="6">3</Tile>
-            <Tile x="2" y="7">3</Tile>
-            <Tile x="3" y="7">3</Tile>
-            <Tile x="4" y="7">3</Tile>
-            <Tile x="5" y="7">3</Tile>
+            <Tile x="6" y="6">3</Tile>
+            <Tile x="7" y="6">3</Tile>
+            <Tile x="0" y="7">8</Tile>
+            <Tile x="1" y="7">8</Tile>
+            <Tile x="2" y="7">8</Tile>
+            <Tile x="3" y="7">8</Tile>
+            <Tile x="4" y="7">8</Tile>
+            <Tile x="5" y="7">8</Tile>
+            <Tile x="6" y="7">8</Tile>
+            <Tile x="7" y="7">8</Tile>
         </Layer>
         <Layer type="Above">
-            <Tile x="4" y="0">13</Tile>
-            <Tile x="1" y="3">23</Tile>
-            <Tile x="3" y="3">23</Tile>
-            <Tile x="1" y="4">23</Tile>
-            <Tile x="2" y="4">33</Tile>
-            <Tile x="3" y="4">23</Tile>
+            <Tile x="5" y="0">13</Tile>
+            <Tile x="2" y="3">23</Tile>
+            <Tile x="4" y="3">23</Tile>
+            <Tile x="2" y="4">23</Tile>
+            <Tile x="3" y="4">33</Tile>
+            <Tile x="4" y="4">23</Tile>
+            <Tile x="3" y="5">34</Tile>
+            <Tile x="3" y="6">24</Tile>
+            <Tile x="4" y="6">35</Tile>
+            <Tile x="5" y="6">35</Tile>
+            <Tile x="6" y="6">35</Tile>
+            <Tile x="7" y="6">35</Tile>
         </Layer>
     </TileLayers>
 </Overworld>
