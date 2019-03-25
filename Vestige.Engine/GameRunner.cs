@@ -115,9 +115,15 @@ namespace Vestige.Engine
             playerSprite.Update(gameTime);
 
             // Speech system
+            speechSystem.Update(gameTime);
             if (keyboardHandler.WasKeyJustPressed(Keys.Space))
             {
                 speechSystem.AdvanceText();
+            }
+
+            if (keyboardHandler.WasKeyJustPressed(Keys.Enter))
+            {
+                speechSystem.ShowText();
             }
 
             base.Update(gameTime);
