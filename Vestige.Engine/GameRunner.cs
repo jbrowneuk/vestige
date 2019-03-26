@@ -62,6 +62,7 @@ namespace Vestige.Engine
 
             speechSystem.MainFont = Content.Load<SpriteFont>(@"Fonts/default");
             speechSystem.BaseArea = Content.Load<Texture2D>(@"Images/square");
+            speechSystem.SpeechBubble = Content.Load<Texture2D>(@"Images/speechBubble");
         }
 
         /// <summary>

@@ -16,7 +16,7 @@ namespace Vestige.Engine.Core
         private bool isShown;
         private bool isAnimating;
         private float animationOffset;
-        private int drawOffset;
+        private float drawOffset;
 
         internal SpeechSystem()
         {
@@ -25,6 +25,8 @@ namespace Vestige.Engine.Core
         }
 
         internal Texture2D BaseArea { get; set; }
+
+        internal Texture2D SpeechBubble { get; set; }
 
         internal SpriteFont MainFont { get; set; }
 
@@ -93,11 +95,10 @@ namespace Vestige.Engine.Core
                     to = visualAreaHeight;
                 }
 
-                drawOffset = (int)MathHelper.Lerp(from, to, animationOffset);
+                drawOffset = MathHelper.Lerp(from, to, animationOffset);
             }
             else
             {
-                // Todo: refactor this - pretty hacky
                 if (isAnimating)
                 {
                     onAnimationFinished();
@@ -116,16 +117,19 @@ namespace Vestige.Engine.Core
                 return;
             }
 
-            var yPosition = Viewport.Bottom - visualAreaHeight + drawOffset;
-            Rectangle drawableArea = new Rectangle(0, yPosition, Viewport.Width, visualAreaHeight);
-            spriteBatch.Draw(BaseArea, drawableArea, Color.Black);
+            // Base area
+            float yPosition = Viewport.Bottom - visualAreaHeight + drawOffset;
+            Rectangle drawableArea = new Rectangle(0, (int)yPosition, Viewport.Width, visualAreaHeight);
+            spriteBatch.Draw(BaseArea, drawableArea, Color.Gray);
 
+            // Text area (comes up at different speed)
+            float centerY = yPosition + visualAreaHeight / 2;
+            Vector2 drawCenter = new Vector2(drawableArea.Center.X, centerY + (drawOffset / 2));
+            Vector2 bubbleOffset = new Vector2(SpeechBubble.Width, SpeechBubble.Height) / 2;
+            spriteBatch.Draw(SpeechBubble, drawCenter - bubbleOffset, Color.White);
             Vector2 textCenter = MainFont.MeasureString(displayText) / 2;
-            Vector2 drawPosition = new Vector2(drawableArea.Center.X, drawableArea.Center.Y) - textCenter;
-            spriteBatch.DrawString(MainFont, displayText, drawPosition, Color.White);
-
-            string debugVars = String.Format("a:{0} aO:{1} dO:{2}", isAnimating, animationOffset, drawOffset);
-            spriteBatch.DrawString(MainFont, debugVars, Vector2.One, Color.Red);
+            Vector2 drawPosition = drawCenter - textCenter;
+            spriteBatch.DrawString(MainFont, displayText, drawPosition, Color.Black);
         }
 
         private string CalculateFormattedText(string rawText)
