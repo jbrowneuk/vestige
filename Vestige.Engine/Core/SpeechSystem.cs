@@ -4,12 +4,32 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace Vestige.Engine.Core
 {
+    internal enum DialogDirection
+    {
+        Left,
+        Right
+    }
+
+    internal class DialogPart
+    {
+        public string messageText;
+        public DialogDirection direction;
+
+        internal DialogPart(string message, DialogDirection dir)
+        {
+            messageText = message;
+            direction = dir;
+        }
+    }
+
     internal class SpeechSystem
     {
         private const int visualAreaHeight = 240;
         private const float moveAnimationSeconds = 0.25f;
 
-        private string[] messages;
+        private readonly Color shadeColor;
+
+        private DialogPart[] messages;
         private int currentMessageIndex;
         private string displayText;
 
@@ -22,14 +42,29 @@ namespace Vestige.Engine.Core
         {
             isShown = false;
             isAnimating = false;
+            shadeColor = new Color(Color.Black, 0.5f);
         }
 
-        internal Texture2D BaseArea { get; set; }
+        /// <summary>
+        /// Used for drawing the blank areas
+        /// </summary>
+        internal Texture2D BlankTexture { get; set; }
 
+        /// <summary>
+        /// Used for drawing the speech bubble
+        /// </summary>
         internal Texture2D SpeechBubble { get; set; }
 
-        internal SpriteFont MainFont { get; set; }
+        internal Texture2D DebugCharacter { get; set; }
 
+        /// <summary>
+        /// The font used to draw the dialog
+        /// </summary>
+        internal SpriteFont Font { get; set; }
+
+        /// <summary>
+        /// The game window viewport
+        /// </summary>
         internal Rectangle Viewport { get; set; }
 
         internal void ShowText()
@@ -40,7 +75,11 @@ namespace Vestige.Engine.Core
             }
 
             // Todo: read messages from file
-            messages = new string[] { "Message 1", "Message 2", "Message 3" };
+            messages = new DialogPart[] {
+                new DialogPart("Message 1", DialogDirection.Right),
+                new DialogPart("Message 2", DialogDirection.Right),
+                new DialogPart("Message 3 facing left", DialogDirection.Left)
+            };
 
             // Reset control variables
             currentMessageIndex = 0;
@@ -117,25 +156,34 @@ namespace Vestige.Engine.Core
                 return;
             }
 
-            // Base area
+            // Darken play area
+            spriteBatch.Draw(BlankTexture, Viewport, shadeColor);
+
+            // Base image area
             float yPosition = Viewport.Bottom - visualAreaHeight + drawOffset;
             Rectangle drawableArea = new Rectangle(0, (int)yPosition, Viewport.Width, visualAreaHeight);
-            spriteBatch.Draw(BaseArea, drawableArea, Color.Gray);
+            spriteBatch.Draw(BlankTexture, drawableArea, Color.SkyBlue);
+
+            // Characters
+            var rightCharacterPos = new Vector2(Viewport.Right - DebugCharacter.Width, yPosition + drawOffset / 2);
+            spriteBatch.Draw(DebugCharacter, rightCharacterPos, Color.White);
 
             // Text area (comes up at different speed)
             float centerY = yPosition + visualAreaHeight / 2;
             Vector2 drawCenter = new Vector2(drawableArea.Center.X, centerY + (drawOffset / 2));
             Vector2 bubbleOffset = new Vector2(SpeechBubble.Width, SpeechBubble.Height) / 2;
-            spriteBatch.Draw(SpeechBubble, drawCenter - bubbleOffset, Color.White);
-            Vector2 textCenter = MainFont.MeasureString(displayText) / 2;
+            SpriteEffects effects = messages[currentMessageIndex].direction == DialogDirection.Right ? SpriteEffects.None : SpriteEffects.FlipHorizontally;
+            spriteBatch.Draw(SpeechBubble, drawCenter - bubbleOffset, null, Color.White, 0.0f, Vector2.Zero, 1f, effects, 0.0f);
+
+            Vector2 textCenter = Font.MeasureString(displayText) / 2;
             Vector2 drawPosition = drawCenter - textCenter;
-            spriteBatch.DrawString(MainFont, displayText, drawPosition, Color.Black);
+            spriteBatch.DrawString(Font, displayText, drawPosition, Color.Black);
         }
 
-        private string CalculateFormattedText(string rawText)
+        private string CalculateFormattedText(DialogPart part)
         {
             // todo - calc drawable area, control widths of strings based upon SpriteFont.MeasureString
-            return rawText;
+            return part.messageText;
         }
 
         private void onAnimationFinished()

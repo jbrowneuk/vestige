@@ -60,9 +60,10 @@ namespace Vestige.Engine
             playerSprite.SpriteSheet = Content.Load<Texture2D>(@"Images/char-f");
             overworld.UpdateTileSet(Content.Load<Texture2D>(@"Images/outdoor"));
 
-            speechSystem.MainFont = Content.Load<SpriteFont>(@"Fonts/default");
-            speechSystem.BaseArea = Content.Load<Texture2D>(@"Images/square");
+            speechSystem.Font = Content.Load<SpriteFont>(@"Fonts/default");
+            speechSystem.BlankTexture = Content.Load<Texture2D>(@"Images/square");
             speechSystem.SpeechBubble = Content.Load<Texture2D>(@"Images/speechBubble");
+            speechSystem.DebugCharacter = Content.Load<Texture2D>(@"Images/test-001");
         }
 
         /// <summary>
