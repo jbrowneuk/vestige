@@ -1,5 +1,4 @@
-﻿using System;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace Vestige.Engine.Core
@@ -25,7 +24,9 @@ namespace Vestige.Engine.Core
     internal class SpeechSystem
     {
         private const int visualAreaHeight = 240;
-        private const float moveAnimationSeconds = 0.25f;
+        private const float moveAnimationSeconds = 0.5f;
+        private const float entryScalingFactor = 1.5f;
+        private const int bubbleVerticalOffset = -80;
 
         private readonly Color shadeColor;
 
@@ -37,6 +38,7 @@ namespace Vestige.Engine.Core
         private bool isAnimating;
         private float animationOffset;
         private float drawOffset;
+        private float blackoutScale;
 
         internal SpeechSystem()
         {
@@ -90,6 +92,7 @@ namespace Vestige.Engine.Core
             isAnimating = true;
             animationOffset = 0;
             drawOffset = visualAreaHeight;
+            blackoutScale = 0;
         }
 
         internal void AdvanceText()
@@ -127,14 +130,15 @@ namespace Vestige.Engine.Core
                 int to = 0;
                 if (currentMessageIndex == 0)
                 {
-                    from = visualAreaHeight;
+                    from = 1;
                 }
                 else
                 {
-                    to = visualAreaHeight;
+                    to = 1;
                 }
 
-                drawOffset = MathHelper.Lerp(from, to, animationOffset);
+                drawOffset = MathHelper.Lerp(from * visualAreaHeight, to * visualAreaHeight, animationOffset);
+                blackoutScale = MathHelper.Lerp(to, from, animationOffset); // Shade effect is inversed
             }
             else
             {
@@ -146,6 +150,7 @@ namespace Vestige.Engine.Core
                 isAnimating = false;
                 animationOffset = 0;
                 drawOffset = 0;
+                blackoutScale = 1;
             }
         }
 
@@ -157,7 +162,7 @@ namespace Vestige.Engine.Core
             }
 
             // Darken play area
-            spriteBatch.Draw(BlankTexture, Viewport, shadeColor);
+            spriteBatch.Draw(BlankTexture, Viewport, shadeColor * blackoutScale);
 
             // Base image area
             float yPosition = Viewport.Bottom - visualAreaHeight + drawOffset;
@@ -165,12 +170,12 @@ namespace Vestige.Engine.Core
             spriteBatch.Draw(BlankTexture, drawableArea, Color.SkyBlue);
 
             // Characters
-            var rightCharacterPos = new Vector2(Viewport.Right - DebugCharacter.Width, yPosition + drawOffset / 2);
+            var rightCharacterPos = new Vector2(Viewport.Right - DebugCharacter.Width, yPosition + drawOffset * entryScalingFactor);
             spriteBatch.Draw(DebugCharacter, rightCharacterPos, Color.White);
 
             // Text area (comes up at different speed)
-            float centerY = yPosition + visualAreaHeight / 2;
-            Vector2 drawCenter = new Vector2(drawableArea.Center.X, centerY + (drawOffset / 2));
+            float centerY = yPosition + bubbleVerticalOffset + visualAreaHeight / 2;
+            Vector2 drawCenter = new Vector2(drawableArea.Center.X, centerY + drawOffset * entryScalingFactor);
             Vector2 bubbleOffset = new Vector2(SpeechBubble.Width, SpeechBubble.Height) / 2;
             SpriteEffects effects = messages[currentMessageIndex].direction == DialogDirection.Right ? SpriteEffects.None : SpriteEffects.FlipHorizontally;
             spriteBatch.Draw(SpeechBubble, drawCenter - bubbleOffset, null, Color.White, 0.0f, Vector2.Zero, 1f, effects, 0.0f);
