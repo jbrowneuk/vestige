@@ -15,6 +15,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Core\AnimatedObject.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\TileSystem.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\Overworld.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\SpeechSystem.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="$(MSBuildThisFileDirectory)Content\" />
@@ -30,5 +31,8 @@
     <Content Include="$(MSBuildThisFileDirectory)Content\Maps\town1.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="$(MSBuildThisFileDirectory)Content\Fonts\default.spritefont" />
   </ItemGroup>
  </Project>

@@ -11,12 +11,14 @@ namespace Vestige.Engine
     /// </summary>
     public class GameRunner : Game
     {
-        private GraphicsDeviceManager graphics;
-        private SpriteBatch spriteBatch;
-        private KeyboardHandler keyboardHandler;
+        private readonly KeyboardHandler keyboardHandler;
         private readonly OverworldObject player;
         private readonly AnimatedObject playerSprite;
         private readonly Overworld overworld;
+        private readonly SpeechSystem speechSystem;
+        private readonly GraphicsDeviceManager graphics;
+
+        private SpriteBatch spriteBatch;
 
         public GameRunner()
         {
@@ -24,6 +26,8 @@ namespace Vestige.Engine
             Content.RootDirectory = "Content";
 
             keyboardHandler = new KeyboardHandler();
+            speechSystem = new SpeechSystem();
+
             overworld = new Overworld();
             player = new OverworldObject();
             player.DrawOffset = new Vector2(0, -8);
@@ -51,8 +55,15 @@ namespace Vestige.Engine
         {
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
+            speechSystem.Viewport = graphics.GraphicsDevice.Viewport.Bounds;
+
             playerSprite.SpriteSheet = Content.Load<Texture2D>(@"Images/char-f");
             overworld.UpdateTileSet(Content.Load<Texture2D>(@"Images/outdoor"));
+
+            speechSystem.Font = Content.Load<SpriteFont>(@"Fonts/default");
+            speechSystem.BlankTexture = Content.Load<Texture2D>(@"Images/square");
+            speechSystem.SpeechBubble = Content.Load<Texture2D>(@"Images/speechBubble");
+            speechSystem.DebugCharacter = Content.Load<Texture2D>(@"Images/test-001");
         }
 
         /// <summary>
@@ -105,6 +116,18 @@ namespace Vestige.Engine
             }
             playerSprite.Update(gameTime);
 
+            // Speech system
+            speechSystem.Update(gameTime);
+            if (keyboardHandler.WasKeyJustPressed(Keys.Space))
+            {
+                speechSystem.AdvanceText();
+            }
+
+            if (keyboardHandler.WasKeyJustPressed(Keys.Enter))
+            {
+                speechSystem.ShowText();
+            }
+
             base.Update(gameTime);
         }
 
@@ -119,6 +142,7 @@ namespace Vestige.Engine
             spriteBatch.Begin();
             overworld.Draw(spriteBatch);
             playerSprite.Draw(spriteBatch);
+            speechSystem.Draw(spriteBatch);
             spriteBatch.End();
 
             base.Draw(gameTime);
