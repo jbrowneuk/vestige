@@ -1,27 +1,12 @@
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace Vestige.Engine.Core
 {
-    internal enum DialogDirection
-    {
-        Left,
-        Right
-    }
-
-    internal class DialogPart
-    {
-        public string messageText;
-        public DialogDirection direction;
-
-        internal DialogPart(string message, DialogDirection dir)
-        {
-            messageText = message;
-            direction = dir;
-        }
-    }
-
-    internal class SpeechSystem
+    /// <summary>
+    /// Used to represent speech (dialog) in-game. Encapsulates the visuals and control of the conversation.
+    /// </summary>
+    internal class DialogSystem
     {
         private const int visualAreaHeight = 240;
         private const float moveAnimationSeconds = 0.5f;
