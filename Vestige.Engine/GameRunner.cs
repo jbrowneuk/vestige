@@ -7,7 +7,7 @@ using Vestige.Engine.Input;
 namespace Vestige.Engine
 {
     /// <summary>
-    /// This is the main type for your game.
+    /// This is the main type for the game.
     /// </summary>
     public class GameRunner : Game
     {
@@ -15,7 +15,7 @@ namespace Vestige.Engine
         private readonly OverworldObject player;
         private readonly AnimatedObject playerSprite;
         private readonly Overworld overworld;
-        private readonly SpeechSystem speechSystem;
+        private readonly DialogSystem speechSystem;
         private readonly GraphicsDeviceManager graphics;
 
         private SpriteBatch spriteBatch;
@@ -26,20 +26,19 @@ namespace Vestige.Engine
             Content.RootDirectory = "Content";
 
             keyboardHandler = new KeyboardHandler();
-            speechSystem = new SpeechSystem();
+            speechSystem = new DialogSystem();
 
             overworld = new Overworld();
-            player = new OverworldObject();
-            player.DrawOffset = new Vector2(0, -8);
             playerSprite = new AnimatedObject();
-            player.Sprite = playerSprite;
+            player = new OverworldObject
+            {
+                DrawOffset = new Vector2(0, -8),
+                Sprite = playerSprite
+            };
         }
 
         /// <summary>
-        /// Allows the game to perform any initialization it needs to before starting to run.
-        /// This is where it can query for any required services and load any non-graphic
-        /// related content.  Calling base.Initialize will enumerate through any components
-        /// and initialize them as well.
+        /// Used by the MonoGame system to initialise the game.
         /// </summary>
         protected override void Initialize()
         {
@@ -48,12 +47,10 @@ namespace Vestige.Engine
         }
 
         /// <summary>
-        /// LoadContent will be called once per game and is the place to load
-        /// all of your content.
+        /// Used to load any content whose lifetime is the same as the game.
         /// </summary>
         protected override void LoadContent()
         {
-            // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
             speechSystem.Viewport = graphics.GraphicsDevice.Viewport.Bounds;
 

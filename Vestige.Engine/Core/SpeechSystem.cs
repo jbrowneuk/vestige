@@ -1,4 +1,4 @@
-﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace Vestige.Engine.Core
@@ -30,17 +30,19 @@ namespace Vestige.Engine.Core
 
         private readonly Color shadeColor;
 
+        // Variables to control dialog
         private DialogPart[] messages;
         private int currentMessageIndex;
         private string displayText;
 
+        // Variables to control visuals
         private bool isShown;
         private bool isAnimating;
         private float animationOffset;
         private float drawOffset;
         private float blackoutScale;
 
-        internal SpeechSystem()
+        internal DialogSystem()
         {
             isShown = false;
             isAnimating = false;
@@ -48,27 +50,33 @@ namespace Vestige.Engine.Core
         }
 
         /// <summary>
-        /// Used for drawing the blank areas
+        /// Used for drawing the blank areas.
         /// </summary>
         internal Texture2D BlankTexture { get; set; }
 
         /// <summary>
-        /// Used for drawing the speech bubble
+        /// Used for drawing the speech bubble.
         /// </summary>
         internal Texture2D SpeechBubble { get; set; }
 
+        /// <summary>
+        /// Debug - remove when completed.
+        /// </summary>
         internal Texture2D DebugCharacter { get; set; }
 
         /// <summary>
-        /// The font used to draw the dialog
+        /// The font used to draw the dialog.
         /// </summary>
         internal SpriteFont Font { get; set; }
 
         /// <summary>
-        /// The game window viewport
+        /// The game window viewport.
         /// </summary>
         internal Rectangle Viewport { get; set; }
 
+        /// <summary>
+        /// Initialises a dialog and shows the system.
+        /// </summary>
         internal void ShowText()
         {
             if (isShown)
@@ -87,7 +95,7 @@ namespace Vestige.Engine.Core
             currentMessageIndex = 0;
             displayText = CalculateFormattedText(messages[currentMessageIndex]);
 
-            // show visual area
+            // Show visual area
             isShown = true;
             isAnimating = true;
             animationOffset = 0;
@@ -95,6 +103,9 @@ namespace Vestige.Engine.Core
             blackoutScale = 0;
         }
 
+        /// <summary>
+        /// Used to advance text if possible or closes the dialog if the messages have ended.
+        /// </summary>
         internal void AdvanceText()
         {
             if (!isShown || isAnimating)
@@ -113,6 +124,10 @@ namespace Vestige.Engine.Core
             }
         }
 
+        /// <summary>
+        /// Used to update the current internal state of the system.
+        /// </summary>
+        /// <param name="gameTime">Current GameTime value from game runner</param>
         internal void Update(GameTime gameTime)
         {
             if (!isShown)
@@ -124,8 +139,7 @@ namespace Vestige.Engine.Core
             {
                 animationOffset += (float)gameTime.ElapsedGameTime.TotalSeconds / moveAnimationSeconds;
 
-                // Apply animation direction based on whether this is the first
-                // message string
+                // Control animation direction (i.e. fade in/out) based on position in dialog
                 int from = 0;
                 int to = 0;
                 if (currentMessageIndex == 0)
@@ -144,7 +158,7 @@ namespace Vestige.Engine.Core
             {
                 if (isAnimating)
                 {
-                    onAnimationFinished();
+                    OnAnimationFinished();
                 }
 
                 isAnimating = false;
@@ -154,6 +168,10 @@ namespace Vestige.Engine.Core
             }
         }
 
+        /// <summary>
+        /// Draws the current system to screen.
+        /// </summary>
+        /// <param name="sb">Activated <see cref="SpriteBatch"/></param>
         internal void Draw(SpriteBatch spriteBatch)
         {
             if (!isShown)
@@ -185,13 +203,21 @@ namespace Vestige.Engine.Core
             spriteBatch.DrawString(Font, displayText, drawPosition, Color.Black);
         }
 
+        /// <summary>
+        /// Calculates the string to display based on the drawable area.
+        /// </summary>
+        /// <param name="part"></param>
+        /// <returns></returns>
         private string CalculateFormattedText(DialogPart part)
         {
             // todo - calc drawable area, control widths of strings based upon SpriteFont.MeasureString
             return part.messageText;
         }
 
-        private void onAnimationFinished()
+        /// <summary>
+        /// Called to control the system behaviour when the animation is finished.
+        /// </summary>
+        private void OnAnimationFinished()
         {
             if (currentMessageIndex == messages.Length - 1)
             {

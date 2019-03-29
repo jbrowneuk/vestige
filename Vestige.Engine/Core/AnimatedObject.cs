@@ -4,54 +4,85 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace Vestige.Engine.Core
 {
-    public class AnimatedObject
+    /// <summary>
+    /// Encapsulates an animated graphic from a sprite sheet.
+    /// </summary>
+    internal class AnimatedObject
     {
-        const int animationMaxFrames = 4;
-        const int horizFrames = 4;
-        const int vertFrames = 4;
-        const int totalFrames = horizFrames * vertFrames;
-        const double animationMsec = 1000 / 4d;
+        const double animationMsec = 1000 / 4d; // Todo: this should be a variable
 
         int currentFrame;
         int frameWidth;
         int frameHeight;
 
-        TimeSpan lastFrameTime;
+        TimeSpan timeSinceLastFrame;
 
-        public AnimatedObject()
+        internal AnimatedObject()
         {
             currentFrame = 0;
-            lastFrameTime = TimeSpan.Zero;
+            timeSinceLastFrame = TimeSpan.Zero;
         }
 
-        public Texture2D SpriteSheet { get; set; } = null;
+        /// <summary>
+        /// The spritesheet to use.
+        /// </summary>
+        internal Texture2D SpriteSheet { get; set; } = null;
 
-        public int FrameOffset { get; set; } = 0;
+        /// <summary>
+        /// The offset of the first frame in the animation.
+        /// </summary>
+        internal int FrameOffset { get; set; } = 0;
 
-        public Vector2 Position { get; set; } = Vector2.Zero;
+        /// <summary>
+        /// The number of frames to show before looping back to the first frame.
+        /// </summary>
+        internal int FramesPerAnimation { get; set; } = 4;
 
-        public void Update(GameTime time)
+        /// <summary>
+        /// Number of frames horizontally in the sprite sheet.
+        /// </summary>
+        internal int HorizontalFrames { get; set; } = 4;
+
+        /// <summary>
+        /// Number of frames vertically in the sprite sheet.
+        /// </summary>
+        internal int VerticalFrames { get; set; } = 4;
+
+        /// <summary>
+        /// The screen position of this object.
+        /// </summary>
+        internal Vector2 Position { get; set; } = Vector2.Zero;
+
+        /// <summary>
+        /// Used to update the current internal state of the object.
+        /// </summary>
+        /// <param name="gameTime">Current GameTime value from game runner</param>
+        internal void Update(GameTime time)
         {
             if (SpriteSheet != null && frameWidth == 0 && frameHeight == 0)
             {
-                frameWidth = SpriteSheet.Width / horizFrames;
-                frameHeight = SpriteSheet.Height / vertFrames;
+                frameWidth = SpriteSheet.Width / HorizontalFrames;
+                frameHeight = SpriteSheet.Height / VerticalFrames;
             }
 
-            lastFrameTime += time.ElapsedGameTime;
+            timeSinceLastFrame += time.ElapsedGameTime;
 
-            if (lastFrameTime.TotalMilliseconds > animationMsec)
+            if (timeSinceLastFrame.TotalMilliseconds > animationMsec)
             {
-                currentFrame = (currentFrame + 1) % animationMaxFrames;
-                lastFrameTime = TimeSpan.Zero;
+                currentFrame = (currentFrame + 1) % FramesPerAnimation;
+                timeSinceLastFrame = TimeSpan.Zero;
             }
         }
 
-        public void Draw(SpriteBatch sb)
+        /// <summary>
+        /// Draws the sprite to screen.
+        /// </summary>
+        /// <param name="sb">Activated <see cref="SpriteBatch"/></param>
+        internal void Draw(SpriteBatch sb)
         {
             int actualFrame = currentFrame + FrameOffset;
-            int frameX = (actualFrame % vertFrames) * frameHeight;
-            int frameY = (int)Math.Floor(actualFrame / (double)vertFrames) * frameWidth;
+            int frameX = (actualFrame % VerticalFrames) * frameHeight;
+            int frameY = (int)Math.Floor(actualFrame / (float)VerticalFrames) * frameWidth;
             Rectangle frameSource = new Rectangle(frameX, frameY, frameWidth, frameHeight);
             sb.Draw(SpriteSheet, Position, frameSource, Color.White);
         }
