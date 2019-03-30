@@ -9,6 +9,8 @@
     <Import_RootNamespace>Vestige.Engine</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)Core\DialogDirection.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\DialogPart.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)GameRunner.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Input\KeyboardHandler.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\OverworldObject.cs" />
@@ -21,7 +23,6 @@
     <Folder Include="$(MSBuildThisFileDirectory)Content\" />
     <Folder Include="$(MSBuildThisFileDirectory)Input\" />
     <Folder Include="$(MSBuildThisFileDirectory)Content\Images\" />
-    <Folder Include="$(MSBuildThisFileDirectory)Core\" />
     <Folder Include="$(MSBuildThisFileDirectory)Content\Maps\" />
   </ItemGroup>
   <ItemGroup>
@@ -35,4 +36,4 @@
   <ItemGroup>
     <None Include="$(MSBuildThisFileDirectory)Content\Fonts\default.spritefont" />
   </ItemGroup>
- </Project>
+</Project>

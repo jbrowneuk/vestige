@@ -1,9 +1,22 @@
+using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace Vestige.Engine.Core
 {
-    public class TileSystem
+    /// <summary>
+    /// Class used to handle level drawing using the tilemap concept.
+    /// 
+    /// The game world is built up out of small squares called tiles.
+    /// Each tile can have a graphic assigned to it that is taken from
+    /// a subset of a larger spritesheet of component images.
+    /// </summary>
+    /// <example>
+    /// A detailed explanation of the concept can be found at the MDN
+    /// by following the following link:
+    /// https://developer.mozilla.org/en-US/docs/Games/Techniques/Tilemaps
+    /// </example>
+    internal class TileSystem
     {
         const int gridSize = 24;
         const int blankTileId = -1;
@@ -13,19 +26,36 @@ namespace Vestige.Engine.Core
         private int gridWidth;
         private Point topLeft;
 
-        public int[,] TileArray { get; private set; }
-        public Texture2D SpriteSheet { get; set; }
-        public int ImageWidth { get { return SpriteSheet != null ? SpriteSheet.Width : 0; } }
-        public int ImageHeight { get { return SpriteSheet != null ? SpriteSheet.Height : 0; } }
+        /// <summary>
+        /// Used to set the tile atlas spritesheet.
+        /// </summary>
+        internal Texture2D SpriteSheet { get; set; }
 
-        public void Initialize(int x, int y, int w, int h)
+        private int[,] TileArray { get; set; }
+        private int ImageWidth { get { return SpriteSheet != null ? SpriteSheet.Width : 0; } }
+        private int ImageHeight { get { return SpriteSheet != null ? SpriteSheet.Height : 0; } }
+
+        /// <summary>
+        /// Initializes the tile system to the specified size and position.
+        /// </summary>
+        /// <param name="x">The x position, in pixels, of the top left of the system</param>
+        /// <param name="y">The y position, in pixels, of the top left of the system</param>
+        /// <param name="w">The width, in tiles, of the system</param>
+        /// <param name="h">The height, in tiles, of the system</param>
+        internal void Initialize(int x, int y, int w, int h)
         {
+            if (w < 1 || h < 1)
+            {
+                throw new ArgumentOutOfRangeException("Width or height need to be a positive integer", (Exception)null);
+            }
+
             topLeft.X = x;
             topLeft.Y = y;
             gridWidth = w;
             gridHeight = h;
             TileArray = new int[w, h];
 
+            // Initialise the array with blank tiles
             for (var xpos = 0; xpos < gridWidth; xpos++)
             {
                 for (var ypos = 0; ypos < gridHeight; ypos++)
@@ -35,7 +65,14 @@ namespace Vestige.Engine.Core
             }
         }
 
-        public void AddTile(int x, int y, int tileId)
+        /// <summary>
+        /// Adds a specific tile, identified by <paramref name="tileId"/>, to the specified coordinates in the system.
+        /// If a tile exists at the position, it will be overwritten.
+        /// </summary>
+        /// <param name="x">X position, in tiles, of the new tile</param>
+        /// <param name="y">Y position, in tiles, of the new tile</param>
+        /// <param name="tileId">The identifier of the tile on the tile atlas spritesheet</param>
+        internal void AddTile(int x, int y, int tileId)
         {
             if (TileArray == null)
             {
@@ -50,7 +87,11 @@ namespace Vestige.Engine.Core
             TileArray[x, y] = tileId;
         }
 
-        public void Draw(SpriteBatch sb)
+        /// <summary>
+        /// Draws the current system to screen.
+        /// </summary>
+        /// <param name="sb">Activated <see cref="SpriteBatch"/></param>
+        internal void Draw(SpriteBatch sb)
         {
             if (SpriteSheet == null || TileArray == null || TileArray.Length == 0)
             {
@@ -83,6 +124,11 @@ namespace Vestige.Engine.Core
             }
         }
 
+        /// <summary>
+        /// Used to calculate the position of a tile with <paramref name="tileId"/> on the tile atlas spritesheet.
+        /// </summary>
+        /// <param name="tileId">The identifier of the tile on the tile atlas spritesheet</param>
+        /// <returns>The top left point of the tile, or an invalid point of <see cref="invalidTileCoord"/> if not found</returns>
         private Point GetTileSourcePosition(int tileId)
         {
             Point location;

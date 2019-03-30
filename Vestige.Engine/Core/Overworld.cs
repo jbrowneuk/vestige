@@ -5,7 +5,10 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace Vestige.Engine.Core
 {
-    public class Overworld
+    /// <summary>
+    /// Main class used to handle loading levels.
+    /// </summary>
+    internal class Overworld
     {
         private readonly TileSystem belowPlayer;
         private readonly TileSystem abovePlayer;
@@ -16,13 +19,17 @@ namespace Vestige.Engine.Core
             abovePlayer = new TileSystem();
         }
 
-        /// <summary>Debug – intent to control the tileset when level is loaded</summary>
+        /// <summary>Debug – intent to control the tileset when level is loaded.</summary>
         internal void UpdateTileSet(Texture2D tileset)
         {
             belowPlayer.SpriteSheet = tileset;
             abovePlayer.SpriteSheet = tileset;
         }
 
+        /// <summary>
+        /// Loads a level from an XML level file.
+        /// </summary>
+        /// <param name="filename">Path to the level file</param>
         internal void LoadLevel(string filename)
         {
             XDocument document;
@@ -37,10 +44,10 @@ namespace Vestige.Engine.Core
             }
 
             // Initialise base tile systems
-            var systemX = getTileSystemAttribute(document.Root, "left", 0);
-            var systemY = getTileSystemAttribute(document.Root, "top", 0);
-            var systemW = getTileSystemAttribute(document.Root, "width", 2);
-            var systemH = getTileSystemAttribute(document.Root, "height", 2);
+            var systemX = GetTileSystemAttribute(document.Root, "left", 0);
+            var systemY = GetTileSystemAttribute(document.Root, "top", 0);
+            var systemW = GetTileSystemAttribute(document.Root, "width", 2);
+            var systemH = GetTileSystemAttribute(document.Root, "height", 2);
 
             belowPlayer.Initialize(systemX, systemY, systemW, systemH);
             abovePlayer.Initialize(systemX, systemY, systemW, systemH);
@@ -49,15 +56,22 @@ namespace Vestige.Engine.Core
             var layersContainerEl = document.Root.Element("TileLayers");
             if (layersContainerEl == null)
             {
+                // Todo: debugging log messages should be removed
                 Console.WriteLine("Cannot find layers container in XML");
                 return;
             }
 
-            loadLayer(layersContainerEl, belowPlayer, "Below");
-            loadLayer(layersContainerEl, abovePlayer, "Above");
+            LoadLayer(layersContainerEl, belowPlayer, "Below");
+            LoadLayer(layersContainerEl, abovePlayer, "Above");
         }
 
-        private void loadLayer(XElement layersContainerEl, TileSystem tileSystem, string layerName)
+        /// <summary>
+        /// Attempts to load a tile layer with specific attributes.
+        /// </summary>
+        /// <param name="layersContainerEl">The <see cref="XElement"/> containing layer information</param>
+        /// <param name="tileSystem">The tile system to load tiles into</param>
+        /// <param name="layerName">The layer name to reference</param>
+        private void LoadLayer(XElement layersContainerEl, TileSystem tileSystem, string layerName)
         {
             var relatedLayerEl = (from layerEl in layersContainerEl.Elements("Layer")
                                   where layerEl.Attribute("type").Value == layerName
@@ -70,8 +84,8 @@ namespace Vestige.Engine.Core
             var tiles = relatedLayerEl.Elements("Tile");
             foreach (var tile in tiles)
             {
-                int x = getTileSystemAttribute(tile, "x", -1);
-                int y = getTileSystemAttribute(tile, "y", -1);
+                int x = GetTileSystemAttribute(tile, "x", -1);
+                int y = GetTileSystemAttribute(tile, "y", -1);
                 int tileId;
                 tileId = int.TryParse(tile.Value, out tileId) ? tileId : -1;
 
@@ -82,7 +96,24 @@ namespace Vestige.Engine.Core
             }
         }
 
-        private int getTileSystemAttribute(XElement element, string attributeName, int defaultValue)
+        /// <summary>
+        /// Draws the level to screen.
+        /// </summary>
+        /// <param name="sb">Activated <see cref="SpriteBatch"/></param>
+        internal void Draw(SpriteBatch spriteBatch)
+        {
+            belowPlayer.Draw(spriteBatch);
+            abovePlayer.Draw(spriteBatch);
+        }
+
+        /// <summary>
+        /// Convenience method to grab data from an attribute. Returns the default value if not possible.
+        /// </summary>
+        /// <param name="element"></param>
+        /// <param name="attributeName"></param>
+        /// <param name="defaultValue"></param>
+        /// <returns></returns>
+        private int GetTileSystemAttribute(XElement element, string attributeName, int defaultValue)
         {
             var rawValue = element.Attribute(attributeName)?.Value;
             if (rawValue == null)
@@ -90,14 +121,8 @@ namespace Vestige.Engine.Core
                 return defaultValue;
             }
 
-            int parsedValue;
-            return int.TryParse(rawValue, out parsedValue) ? parsedValue : defaultValue;
-        }
-
-        internal void Draw(SpriteBatch spriteBatch)
-        {
-            belowPlayer.Draw(spriteBatch);
-            abovePlayer.Draw(spriteBatch);
+            // Fixme: if it weren't for the TryParse this could be generic
+            return int.TryParse(rawValue, out int parsedValue) ? parsedValue : defaultValue;
         }
     }
 }

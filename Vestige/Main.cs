@@ -6,6 +6,9 @@ using AppKit;
 
 namespace Vestige
 {
+    /// <summary>
+    /// Game bootstrapper
+    /// </summary>
     static class Program
     {
         /// <summary>

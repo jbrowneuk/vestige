@@ -1,12 +1,14 @@
 ﻿using System;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 
 namespace Vestige.Engine.Core
 {
-    public class OverworldObject
+    /// <summary>
+    /// Generic class used to represent any object in the game's overworld (levels).
+    /// </summary>
+    internal class OverworldObject
     {
-        private const int gridSize = 12;
+        private const int gridSize = 12; // Todo: refactor out to constants shared with the tile system
         private const float moveSpeed = gridSize * 8f;
         private Vector2 currentPosition;
         private Vector2 startPosition;
@@ -21,10 +23,21 @@ namespace Vestige.Engine.Core
             movement = 0;
         }
 
-        public AnimatedObject Sprite { get; set; } = null;
+        /// <summary>
+        /// If set, the sprite will become the visual representation of this object
+        /// and is kept updated with this object's current location.
+        /// </summary>
+        internal AnimatedObject Sprite { get; set; } = null;
 
-        public Vector2 DrawOffset { get; set; } = Vector2.Zero;
+        /// <summary>
+        /// An optional offset that is added to the <see cref="Sprite"/>.
+        /// </summary>
+        internal Vector2 DrawOffset { get; set; } = Vector2.Zero;
 
+        /// <summary>
+        /// Used to update the current internal state of the object.
+        /// </summary>
+        /// <param name="gameTime">Current GameTime value from game runner</param>
         internal void Update(GameTime time)
         {
             if (startPosition != endPosition && movement < 1)
@@ -45,7 +58,11 @@ namespace Vestige.Engine.Core
             }
         }
 
-        internal void Move(Vector2 keyboardMovement)
+        /// <summary>
+        /// Used to move the object on the grid.
+        /// </summary>
+        /// <param name="direction">A vector containing the direction to move in</param>
+        internal void Move(Vector2 direction)
         {
             // Check if on grid
             if (Math.Abs(currentPosition.X % gridSize) > float.Epsilon || Math.Abs(currentPosition.Y % gridSize) > float.Epsilon)
@@ -53,8 +70,9 @@ namespace Vestige.Engine.Core
                 return;
             }
 
+            // Todo: handle diagonals
             startPosition = currentPosition;
-            endPosition = startPosition + (Vector2.Normalize(keyboardMovement) * gridSize);
+            endPosition = startPosition + (Vector2.Normalize(direction) * gridSize);
         }
     }
 }
