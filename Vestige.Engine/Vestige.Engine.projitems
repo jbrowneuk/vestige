@@ -22,9 +22,11 @@
     <Compile Include="$(MSBuildThisFileDirectory)Dialogue\DialogueDirection.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Dialogue\InputDialoguePart.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Dialogue\TextDialoguePart.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Input\MouseHandler.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="$(MSBuildThisFileDirectory)Input\" />
+    <Folder Include="$(MSBuildThisFileDirectory)Content\" />
     <Folder Include="$(MSBuildThisFileDirectory)Content\Images\" />
     <Folder Include="$(MSBuildThisFileDirectory)Content\Maps\" />
     <Folder Include="$(MSBuildThisFileDirectory)Dialogue\" />
