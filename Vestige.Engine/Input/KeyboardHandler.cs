@@ -13,7 +13,7 @@ namespace Vestige.Engine.Input
         /// <summary>
         /// Used to update the current internal state of the keyboard handler.
         /// </summary>
-        public void Update()
+        internal void Update()
         {
             lastState = currentState;
             currentState = Keyboard.GetState();
@@ -23,7 +23,7 @@ namespace Vestige.Engine.Input
         /// Returns true if a specified key is pressed.
         /// </summary>
         /// <param name="key">The keyboard key to check</param>
-        public bool IsKeyDown(Keys key)
+        internal bool IsKeyDown(Keys key)
         {
             return currentState.IsKeyDown(key);
         }
@@ -32,7 +32,7 @@ namespace Vestige.Engine.Input
         /// Returns true if a specified key is not pressed.
         /// </summary>
         /// <param name="key">The keyboard key to check</param>
-        public bool IsKeyUp(Keys key)
+        internal bool IsKeyUp(Keys key)
         {
             return currentState.IsKeyUp(key);
         }
@@ -41,7 +41,7 @@ namespace Vestige.Engine.Input
         /// Returns true when a keyboard key has changed state from not pressed to pressed.
         /// </summary>
         /// <param name="key">The keyboard key to check</param>
-        public bool WasKeyJustPressed(Keys key)
+        internal bool WasKeyJustPressed(Keys key)
         {
             return currentState.IsKeyDown(key) && lastState.IsKeyUp(key);
         }
@@ -50,7 +50,7 @@ namespace Vestige.Engine.Input
         /// Returns true when a keyboard key has changed state from pressed to not pressed.
         /// </summary>
         /// <param name="key">The keyboard key to check</param>
-        public bool WasKeyJustReleased(Keys key)
+        internal bool WasKeyJustReleased(Keys key)
         {
             return currentState.IsKeyUp(key) && lastState.IsKeyDown(key);
         }
