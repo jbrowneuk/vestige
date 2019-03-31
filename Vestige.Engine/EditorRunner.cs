@@ -9,11 +9,13 @@ namespace Vestige.Engine
     public class EditorRunner : Game
     {
         private readonly KeyboardHandler keyboardHandler;
+        private readonly MouseHandler mouseHandler;
         private readonly Overworld overworld;
         private readonly GraphicsDeviceManager graphics;
 
         private SpriteBatch spriteBatch;
         private Texture2D blankSquare;
+        private Point dbgLastClick;
 
         public EditorRunner()
         {
@@ -21,12 +23,15 @@ namespace Vestige.Engine
             Content.RootDirectory = "Content";
 
             keyboardHandler = new KeyboardHandler();
+            mouseHandler = new MouseHandler();
             overworld = new Overworld();
         }
 
         protected override void Initialize()
         {
             IsMouseVisible = true;
+            Window.AllowUserResizing = true;
+
             overworld.LoadLevel(Content.RootDirectory + "/Maps/town1.xml");
             base.Initialize();
         }
@@ -41,10 +46,16 @@ namespace Vestige.Engine
         protected override void Update(GameTime gameTime)
         {
             keyboardHandler.Update();
+            mouseHandler.Update();
 
             if (keyboardHandler.IsKeyDown(Keys.Escape))
             {
                 Exit();
+            }
+
+            if (mouseHandler.WasButtonJustPressed(MouseButton.Left))
+            {
+                dbgLastClick = mouseHandler.CurrentPosition;
             }
 
             base.Update(gameTime);
@@ -69,6 +80,8 @@ namespace Vestige.Engine
                 var lineTemplate = new Rectangle(0, y * Constants.TileSize, overworld.WorldWidth * Constants.TileSize, 1);
                 spriteBatch.Draw(blankSquare, lineTemplate, lineColor);
             }
+
+            spriteBatch.Draw(blankSquare, dbgLastClick.ToVector2(), Color.Red);
 
             spriteBatch.End();
 
