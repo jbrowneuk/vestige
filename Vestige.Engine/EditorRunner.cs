@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Vestige.Engine.Core;
@@ -15,7 +16,9 @@ namespace Vestige.Engine
 
         private SpriteBatch spriteBatch;
         private Texture2D blankSquare;
-        private Point dbgLastClick;
+        private SpriteFont mainFont;
+        private Point selection;
+        private string selectedTileInfo;
 
         public EditorRunner()
         {
@@ -41,22 +44,12 @@ namespace Vestige.Engine
             spriteBatch = new SpriteBatch(GraphicsDevice);
             overworld.UpdateTileSet(Content.Load<Texture2D>(@"Images/outdoor"));
             blankSquare = Content.Load<Texture2D>(@"Images/square");
+            mainFont = Content.Load<SpriteFont>(@"Fonts/default");
         }
 
         protected override void Update(GameTime gameTime)
         {
-            keyboardHandler.Update();
-            mouseHandler.Update();
-
-            if (keyboardHandler.IsKeyDown(Keys.Escape))
-            {
-                Exit();
-            }
-
-            if (mouseHandler.WasButtonJustPressed(MouseButton.Left))
-            {
-                dbgLastClick = mouseHandler.CurrentPosition;
-            }
+            UpdateEditor(gameTime);
 
             base.Update(gameTime);
         }
@@ -68,6 +61,44 @@ namespace Vestige.Engine
             spriteBatch.Begin();
             overworld.Draw(spriteBatch);
 
+            RenderGrid(spriteBatch);
+            RenderSelection(spriteBatch);
+            RenderSidebar(spriteBatch);
+
+            spriteBatch.End();
+
+            base.Draw(gameTime);
+        }
+
+        private void UpdateEditor(GameTime gameTime)
+        {
+            // Only respond if game window is active
+            if (!IsActive)
+            {
+                return;
+            }
+
+            keyboardHandler.Update();
+            if (keyboardHandler.IsKeyDown(Keys.Escape))
+            {
+                Exit();
+            }
+
+            mouseHandler.Update();
+            if (mouseHandler.WasButtonJustPressed(MouseButton.Left))
+            {
+                Point clickLocation = mouseHandler.CurrentPosition;
+                Point gridLocation = new Point(clickLocation.X / Constants.TileSize, clickLocation.Y / Constants.TileSize);
+                if (gridLocation.X >= 0 && gridLocation.X < overworld.WorldWidth && gridLocation.Y >= 0 || gridLocation.Y < overworld.WorldHeight)
+                {
+                    selection = gridLocation;
+                    selectedTileInfo =string.Format("Selected tile ID is {0}", overworld.DemoBelowPlayer.GetTileId(gridLocation)); ;
+                }
+            }
+        }
+
+        private void RenderGrid(SpriteBatch spriteBatch)
+        {
             var lineColor = Color.Blue * 0.5f;
             for (var x = 0; x < overworld.WorldWidth; x++)
             {
@@ -80,12 +111,32 @@ namespace Vestige.Engine
                 var lineTemplate = new Rectangle(0, y * Constants.TileSize, overworld.WorldWidth * Constants.TileSize, 1);
                 spriteBatch.Draw(blankSquare, lineTemplate, lineColor);
             }
+        }
 
-            spriteBatch.Draw(blankSquare, dbgLastClick.ToVector2(), Color.Red);
+        private void RenderSelection(SpriteBatch spriteBatch)
+        {
+            // fixme: demo purposes only
+            if (selectedTileInfo != null)
+            {
+                spriteBatch.Draw(blankSquare, selection.ToVector2() * Constants.TileSize, Color.White * 0.5f);
+            }
+        }
 
-            spriteBatch.End();
+        private void RenderSidebar(SpriteBatch spriteBatch)
+        {
+            const int sidebarWidth = 320;
+            Rectangle screenBounds = graphics.GraphicsDevice.Viewport.Bounds;
+            Rectangle sideBarArea = new Rectangle(screenBounds.Width - sidebarWidth, 0, 1, screenBounds.Height); // Dividing line only currently
+            spriteBatch.Draw(blankSquare, sideBarArea, Color.Gray);
 
-            base.Draw(gameTime);
+            if (selectedTileInfo != null)
+            {
+                spriteBatch.DrawString(mainFont, selectedTileInfo, new Vector2(sideBarArea.X + 8, sideBarArea.Y + 4), Color.Black);
+            }
+
+            // Fixme: this is demo only
+            spriteBatch.DrawString(mainFont, "TileSet:", new Vector2(sideBarArea.X + 8, sideBarArea.Y + 24), Color.Black);
+            spriteBatch.Draw(overworld.DemoBelowPlayer.SpriteSheet, new Vector2(sideBarArea.X + 8, sideBarArea.Y + 48), Color.White);
         }
     }
 }

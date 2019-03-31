@@ -87,6 +87,24 @@ namespace Vestige.Engine.Core
         }
 
         /// <summary>
+        /// Fixme: demo purposes only. Remove when a better editor-specific implementation is created.
+        /// </summary>
+        internal int GetTileId(Point location)
+        {
+            if (TileArray == null)
+            {
+                return blankTileId;
+            }
+
+            if (location.X < 0 || location.X >= gridWidth || location.Y < 0 || location.Y >= gridHeight)
+            {
+                return blankTileId;
+            }
+
+            return TileArray[location.X, location.Y];
+        }
+
+        /// <summary>
         /// Draws the current system to screen.
         /// </summary>
         /// <param name="sb">Activated <see cref="SpriteBatch"/></param>

@@ -25,6 +25,9 @@ namespace Vestige.Engine.Core
         /// <summary>Height of the loaded world, in tiles</summary>
         internal int WorldHeight { get; private set; }
 
+        /// <summary>Fixme: For demo/testing purposes only. Remove when a better access method is implemented</summary>
+        internal TileSystem DemoBelowPlayer { get { return belowPlayer; } }
+
         /// <summary>Debug – intent to control the tileset when level is loaded.</summary>
         internal void UpdateTileSet(Texture2D tileset)
         {
