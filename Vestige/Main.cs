@@ -1,4 +1,6 @@
-﻿using Vestige.Engine;
+﻿using System.Linq;
+using Microsoft.Xna.Framework;
+using Vestige.Engine;
 
 #if MACOS
 using AppKit;
@@ -20,7 +22,8 @@ namespace Vestige
             NSApplication.Init();
 #endif
 
-            using (var game = new GameRunner())
+            bool runEditor = args.Contains("--editor");
+            using (var game = runEditor ? new EditorRunner() as Game : new GameRunner())
             {
                 game.Run();
             }
