@@ -8,8 +8,7 @@ namespace Vestige.Engine.Core
     /// </summary>
     internal class OverworldObject
     {
-        private const int gridSize = 12; // Todo: refactor out to constants shared with the tile system
-        private const float moveSpeed = gridSize * 8f;
+        private const float moveSpeed = Constants.GridSize * 8f;
         private Vector2 currentPosition;
         private Vector2 startPosition;
         private Vector2 endPosition;
@@ -42,7 +41,7 @@ namespace Vestige.Engine.Core
         {
             if (startPosition != endPosition && movement < 1)
             {
-                movement += (float)time.ElapsedGameTime.TotalSeconds * (moveSpeed / gridSize);
+                movement += (float)time.ElapsedGameTime.TotalSeconds * (moveSpeed / Constants.GridSize);
                 currentPosition = Vector2.Lerp(startPosition, endPosition, movement);
             }
             else
@@ -65,14 +64,14 @@ namespace Vestige.Engine.Core
         internal void Move(Vector2 direction)
         {
             // Check if on grid
-            if (Math.Abs(currentPosition.X % gridSize) > float.Epsilon || Math.Abs(currentPosition.Y % gridSize) > float.Epsilon)
+            if (Math.Abs(currentPosition.X % Constants.GridSize) > float.Epsilon || Math.Abs(currentPosition.Y % Constants.GridSize) > float.Epsilon)
             {
                 return;
             }
 
             // Todo: handle diagonals
             startPosition = currentPosition;
-            endPosition = startPosition + (Vector2.Normalize(direction) * gridSize);
+            endPosition = startPosition + (Vector2.Normalize(direction) * Constants.GridSize);
         }
     }
 }

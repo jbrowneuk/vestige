@@ -15,6 +15,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Core\AnimatedObject.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\TileSystem.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\Overworld.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\Constants.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Dialogue\DialogueSystem.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Dialogue\DialoguePart.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Dialogue\DialogueDirection.cs" />

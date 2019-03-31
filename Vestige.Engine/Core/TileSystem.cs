@@ -18,7 +18,6 @@ namespace Vestige.Engine.Core
     /// </example>
     internal class TileSystem
     {
-        const int gridSize = 24;
         const int blankTileId = -1;
         const int invalidTileCoord = -1;
 
@@ -98,8 +97,8 @@ namespace Vestige.Engine.Core
                 return;
             }
 
-            var tileSource = new Rectangle(0, 0, gridSize, gridSize);
-            var outputArea = new Rectangle(0, 0, gridSize, gridSize);
+            var tileSource = new Rectangle(0, 0, Constants.TileSize, Constants.TileSize);
+            var outputArea = new Rectangle(0, 0, Constants.TileSize, Constants.TileSize);
             for (var xpos = 0; xpos < gridWidth; xpos++)
             {
                 for (var ypos = 0; ypos < gridHeight; ypos++)
@@ -116,7 +115,7 @@ namespace Vestige.Engine.Core
                         continue;
                     }
 
-                    var destination = new Point(xpos * gridSize + (int)topLeft.X, ypos * gridSize + (int)topLeft.Y);
+                    var destination = new Point(xpos * Constants.TileSize + (int)topLeft.X, ypos * Constants.TileSize + (int)topLeft.Y);
                     outputArea.Location = destination;
 
                     sb.Draw(SpriteSheet, outputArea, tileSource, Color.White);
@@ -132,12 +131,12 @@ namespace Vestige.Engine.Core
         private Point GetTileSourcePosition(int tileId)
         {
             Point location;
-            location.Y = tileId / (ImageWidth / gridSize);
-            location.X = tileId - (location.Y * (ImageWidth / gridSize));
+            location.Y = tileId / (ImageWidth / Constants.TileSize);
+            location.X = tileId - (location.Y * (ImageWidth / Constants.TileSize));
 
             // Multiply up for tile size
-            location.X *= gridSize;
-            location.Y *= gridSize;
+            location.X *= Constants.TileSize;
+            location.Y *= Constants.TileSize;
 
             // Sanity check
             if (location.X > ImageWidth || location.Y > ImageHeight)

@@ -19,6 +19,12 @@ namespace Vestige.Engine.Core
             abovePlayer = new TileSystem();
         }
 
+        /// <summary>Width of the loaded world, in tiles</summary>
+        internal int WorldWidth { get; private set; }
+
+        /// <summary>Height of the loaded world, in tiles</summary>
+        internal int WorldHeight { get; private set; }
+
         /// <summary>Debug – intent to control the tileset when level is loaded.</summary>
         internal void UpdateTileSet(Texture2D tileset)
         {
@@ -46,11 +52,11 @@ namespace Vestige.Engine.Core
             // Initialise base tile systems
             var systemX = GetTileSystemAttribute(document.Root, "left", 0);
             var systemY = GetTileSystemAttribute(document.Root, "top", 0);
-            var systemW = GetTileSystemAttribute(document.Root, "width", 2);
-            var systemH = GetTileSystemAttribute(document.Root, "height", 2);
+            WorldWidth = GetTileSystemAttribute(document.Root, "width", 2);
+            WorldHeight = GetTileSystemAttribute(document.Root, "height", 2);
 
-            belowPlayer.Initialize(systemX, systemY, systemW, systemH);
-            abovePlayer.Initialize(systemX, systemY, systemW, systemH);
+            belowPlayer.Initialize(systemX, systemY, WorldWidth, WorldHeight);
+            abovePlayer.Initialize(systemX, systemY, WorldWidth, WorldHeight);
 
             // Load tile layers
             var layersContainerEl = document.Root.Element("TileLayers");
