@@ -6,13 +6,21 @@
     /// <seealso cref="DialogDirection"/>
     internal class DialogPart
     {
-        public string messageText;
-        public DialogDirection direction;
+        public string MessageText { get; private set; }
+        public DialogDirection Direction { get; private set; }
+        public bool IsLeftCharacterVisible { get; private set; }
+        public bool IsRightCharacterVisible { get; private set; }
 
-        internal DialogPart(string message, DialogDirection dir)
+        internal DialogPart(
+            string message,
+            DialogDirection dir,
+            bool leftChar,
+            bool rightChar)
         {
-            messageText = message;
-            direction = dir;
+            MessageText = message;
+            Direction = dir;
+            IsLeftCharacterVisible = leftChar;
+            IsRightCharacterVisible = rightChar;
         }
     }
 }

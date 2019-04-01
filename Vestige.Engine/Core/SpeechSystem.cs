@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace Vestige.Engine.Core
@@ -71,9 +72,9 @@ namespace Vestige.Engine.Core
 
             // Todo: read messages from file
             messages = new DialogPart[] {
-                new DialogPart("Message 1", DialogDirection.Right),
-                new DialogPart("Message 2", DialogDirection.Right),
-                new DialogPart("Message 3 facing left", DialogDirection.Left)
+                new DialogPart("Words words words", DialogDirection.Left, true, false),
+                new DialogPart("More words words", DialogDirection.Left, true, false),
+                new DialogPart("NO", DialogDirection.Right, true, true)
             };
 
             // Reset control variables
@@ -173,19 +174,54 @@ namespace Vestige.Engine.Core
             spriteBatch.Draw(BlankTexture, drawableArea, Color.SkyBlue);
 
             // Characters
-            var rightCharacterPos = new Vector2(Viewport.Right - DebugCharacter.Width, yPosition + drawOffset * entryScalingFactor);
-            spriteBatch.Draw(DebugCharacter, rightCharacterPos, Color.White);
+            float characterTop = yPosition + drawOffset * entryScalingFactor;
+            DialogPart currentDialogPart = messages[currentMessageIndex];
+            if (currentDialogPart.IsLeftCharacterVisible)
+            {
+                DrawLeftSideCharacter(spriteBatch, characterTop);
+            }
 
-            // Text area (comes up at different speed)
+            if (currentDialogPart.IsRightCharacterVisible)
+            {
+                DrawRightSideCharacter(spriteBatch, characterTop);
+            }
+
+            // Text area
+            DrawSpeechBubble(spriteBatch, drawableArea, yPosition);
+        }
+
+        /// <summary>
+        /// Draws the speech bubble
+        /// </summary>
+        private void DrawSpeechBubble(SpriteBatch spriteBatch, Rectangle drawableArea, float yPosition)
+        {
             float centerY = yPosition + bubbleVerticalOffset + visualAreaHeight / 2;
             Vector2 drawCenter = new Vector2(drawableArea.Center.X, centerY + drawOffset * entryScalingFactor);
             Vector2 bubbleOffset = new Vector2(SpeechBubble.Width, SpeechBubble.Height) / 2;
-            SpriteEffects effects = messages[currentMessageIndex].direction == DialogDirection.Right ? SpriteEffects.None : SpriteEffects.FlipHorizontally;
+            SpriteEffects effects = messages[currentMessageIndex].Direction == DialogDirection.Left ? SpriteEffects.None : SpriteEffects.FlipHorizontally;
             spriteBatch.Draw(SpeechBubble, drawCenter - bubbleOffset, null, Color.White, 0.0f, Vector2.Zero, 1f, effects, 0.0f);
 
             Vector2 textCenter = Font.MeasureString(displayText) / 2;
             Vector2 drawPosition = drawCenter - textCenter;
             spriteBatch.DrawString(Font, displayText, drawPosition, Color.Black);
+        }
+
+        /// <summary>
+        /// Draws the characters on the left side of the bubble.
+        /// </summary>
+        private void DrawLeftSideCharacter(SpriteBatch spriteBatch, float yPosition)
+        {
+            var characterPos = new Vector2(0, yPosition);
+            spriteBatch.Draw(DebugCharacter, characterPos, Color.White);
+        }
+
+        /// <summary>
+        /// Draws the characters on the right side of the bubble.
+        /// </summary>
+        private void DrawRightSideCharacter(SpriteBatch spriteBatch, float yPosition)
+        {
+            var characterPos = new Vector2(Viewport.Right - DebugCharacter.Width, yPosition);
+            spriteBatch.Draw(DebugCharacter, characterPos, null, Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.FlipHorizontally, 0);
         }
 
         /// <summary>
@@ -196,7 +232,7 @@ namespace Vestige.Engine.Core
         private string CalculateFormattedText(DialogPart part)
         {
             // todo - calc drawable area, control widths of strings based upon SpriteFont.MeasureString
-            return part.messageText;
+            return part.MessageText;
         }
 
         /// <summary>
