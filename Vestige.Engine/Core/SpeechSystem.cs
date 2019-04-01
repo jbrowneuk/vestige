@@ -18,6 +18,7 @@ namespace Vestige.Engine.Core
 
         // Variables to control dialog
         private DialogPart[] messages;
+        private DialogPart currentDialogPart;
         private int currentMessageIndex;
         private string displayText;
 
@@ -72,14 +73,16 @@ namespace Vestige.Engine.Core
 
             // Todo: read messages from file
             messages = new DialogPart[] {
-                new DialogPart("Words words words", DialogDirection.Left, true, false),
-                new DialogPart("More words words", DialogDirection.Left, true, false),
-                new DialogPart("NO", DialogDirection.Right, true, true)
+                new DialogPart("Words words words", DialogDirection.Left, DialogDirection.Left, DialogDirection.None),
+                new DialogPart("More words words", DialogDirection.Left, DialogDirection.Right, DialogDirection.None),
+                new DialogPart("NO", DialogDirection.Right, DialogDirection.Right, DialogDirection.Left)
             };
 
             // Reset control variables
+            // Todo: this is duplicated; refactor required
             currentMessageIndex = 0;
-            displayText = CalculateFormattedText(messages[currentMessageIndex]);
+            currentDialogPart = messages[currentMessageIndex];
+            displayText = CalculateFormattedText(currentDialogPart);
 
             // Show visual area
             isShown = true;
@@ -102,7 +105,8 @@ namespace Vestige.Engine.Core
             if (currentMessageIndex < messages.Length - 1)
             {
                 currentMessageIndex += 1;
-                displayText = CalculateFormattedText(messages[currentMessageIndex]);
+                currentDialogPart = messages[currentMessageIndex];
+                displayText = CalculateFormattedText(currentDialogPart);
             }
             else
             {
@@ -175,19 +179,14 @@ namespace Vestige.Engine.Core
 
             // Characters
             float characterTop = yPosition + drawOffset * entryScalingFactor;
-            DialogPart currentDialogPart = messages[currentMessageIndex];
-            if (currentDialogPart.IsLeftCharacterVisible)
-            {
-                DrawLeftSideCharacter(spriteBatch, characterTop);
-            }
-
-            if (currentDialogPart.IsRightCharacterVisible)
-            {
-                DrawRightSideCharacter(spriteBatch, characterTop);
-            }
+            DrawLeftSideCharacter(spriteBatch, characterTop);
+            DrawRightSideCharacter(spriteBatch, characterTop);
 
             // Text area
-            DrawSpeechBubble(spriteBatch, drawableArea, yPosition);
+            if (currentDialogPart.Direction != DialogDirection.None)
+            {
+                DrawSpeechBubble(spriteBatch, drawableArea, yPosition);
+            }
         }
 
         /// <summary>
@@ -211,8 +210,8 @@ namespace Vestige.Engine.Core
         /// </summary>
         private void DrawLeftSideCharacter(SpriteBatch spriteBatch, float yPosition)
         {
-            var characterPos = new Vector2(0, yPosition);
-            spriteBatch.Draw(DebugCharacter, characterPos, Color.White);
+            DialogDirection direction = currentDialogPart.LeftCharacterDirection;
+            DrawCharacter(spriteBatch, 0, yPosition, direction);
         }
 
         /// <summary>
@@ -220,8 +219,23 @@ namespace Vestige.Engine.Core
         /// </summary>
         private void DrawRightSideCharacter(SpriteBatch spriteBatch, float yPosition)
         {
-            var characterPos = new Vector2(Viewport.Right - DebugCharacter.Width, yPosition);
-            spriteBatch.Draw(DebugCharacter, characterPos, null, Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.FlipHorizontally, 0);
+            DialogDirection direction = currentDialogPart.RightCharacterDirection;
+            DrawCharacter(spriteBatch, Viewport.Right - DebugCharacter.Width, yPosition, direction);
+        }
+
+        /// <summary>
+        /// Draws a character graphic at a specified position.
+        /// </summary>
+        private void DrawCharacter(SpriteBatch spriteBatch, int xPosition, float yPosition, DialogDirection direction)
+        {
+            if (direction == DialogDirection.None)
+            {
+                return;
+            }
+
+            Vector2 characterPos = new Vector2(xPosition, yPosition);
+            SpriteEffects flip = direction == DialogDirection.Left ? SpriteEffects.None : SpriteEffects.FlipHorizontally;
+            spriteBatch.Draw(DebugCharacter, characterPos, null, Color.White, 0f, Vector2.Zero, 1f, flip, 0);
         }
 
         /// <summary>

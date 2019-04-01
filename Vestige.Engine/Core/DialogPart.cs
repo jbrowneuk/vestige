@@ -8,19 +8,19 @@
     {
         public string MessageText { get; private set; }
         public DialogDirection Direction { get; private set; }
-        public bool IsLeftCharacterVisible { get; private set; }
-        public bool IsRightCharacterVisible { get; private set; }
+        public DialogDirection LeftCharacterDirection { get; private set; }
+        public DialogDirection RightCharacterDirection { get; private set; }
 
         internal DialogPart(
             string message,
             DialogDirection dir,
-            bool leftChar,
-            bool rightChar)
+            DialogDirection leftChar = DialogDirection.Right,
+            DialogDirection rightChar = DialogDirection.Left)
         {
             MessageText = message;
             Direction = dir;
-            IsLeftCharacterVisible = leftChar;
-            IsRightCharacterVisible = rightChar;
+            LeftCharacterDirection = leftChar;
+            RightCharacterDirection = rightChar;
         }
     }
 }

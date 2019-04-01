@@ -6,6 +6,8 @@
     /// <seealso cref="DialogPart"/>
     internal enum DialogDirection
     {
+        /// <summary>Element is not present.</summary>
+        None,
         Left,
         Right
     }
