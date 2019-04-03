@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Dialogue>
+    <Part>
+        <CharacterLeft>Right</CharacterLeft>
+        <CharacterRight>None</CharacterRight>
+        <Bubble>Left</Bubble>
+        <Message>Single Item Message</Message>
+    </Part>
+</Dialogue>

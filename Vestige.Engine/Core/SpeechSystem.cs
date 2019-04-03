@@ -1,4 +1,6 @@
-﻿using System;
+using System;
+using System.Collections.Generic;
+using System.Xml.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -25,6 +27,7 @@ namespace Vestige.Engine.Core
         // Variables to control visuals
         private bool isShown;
         private bool isAnimating;
+        private bool isUp;
         private float animationOffset;
         private float drawOffset;
         private float blackoutScale;
@@ -33,6 +36,7 @@ namespace Vestige.Engine.Core
         {
             isShown = false;
             isAnimating = false;
+            isUp = false;
             shadeColor = new Color(Color.Black, 0.5f);
         }
 
@@ -71,12 +75,7 @@ namespace Vestige.Engine.Core
                 return;
             }
 
-            // Todo: read messages from file
-            messages = new DialogPart[] {
-                new DialogPart("Words words words", DialogDirection.Left, DialogDirection.Left, DialogDirection.None),
-                new DialogPart("More words words", DialogDirection.Left, DialogDirection.Right, DialogDirection.None),
-                new DialogPart("NO", DialogDirection.Right, DialogDirection.Right, DialogDirection.Left)
-            };
+            LoadDialogue();
 
             // Reset control variables
             // Todo: this is duplicated; refactor required
@@ -132,7 +131,8 @@ namespace Vestige.Engine.Core
                 // Control animation direction (i.e. fade in/out) based on position in dialog
                 int from = 0;
                 int to = 0;
-                if (currentMessageIndex == 0)
+
+                if (!isUp)
                 {
                     from = 1;
                 }
@@ -148,7 +148,14 @@ namespace Vestige.Engine.Core
             {
                 if (isAnimating)
                 {
-                    OnAnimationFinished();
+                    isUp = drawOffset <= 0;
+
+                    if (!isUp)
+                    {
+                        // Clear state
+                        messages = null;
+                        isShown = false;
+                    }
                 }
 
                 isAnimating = false;
@@ -161,7 +168,7 @@ namespace Vestige.Engine.Core
         /// <summary>
         /// Draws the current system to screen.
         /// </summary>
-        /// <param name="sb">Activated <see cref="SpriteBatch"/></param>
+        /// <param name="spriteBatch">Activated <see cref="SpriteBatch"/></param>
         internal void Draw(SpriteBatch spriteBatch)
         {
             if (!isShown)
@@ -211,7 +218,7 @@ namespace Vestige.Engine.Core
         private void DrawLeftSideCharacter(SpriteBatch spriteBatch, float yPosition)
         {
             DialogDirection direction = currentDialogPart.LeftCharacterDirection;
-            DrawCharacter(spriteBatch, 0, yPosition, direction);
+            DrawCharacter(spriteBatch, (int)-drawOffset, yPosition, direction);
         }
 
         /// <summary>
@@ -220,7 +227,7 @@ namespace Vestige.Engine.Core
         private void DrawRightSideCharacter(SpriteBatch spriteBatch, float yPosition)
         {
             DialogDirection direction = currentDialogPart.RightCharacterDirection;
-            DrawCharacter(spriteBatch, Viewport.Right - DebugCharacter.Width, yPosition, direction);
+            DrawCharacter(spriteBatch, Viewport.Right - DebugCharacter.Width + (int)drawOffset, yPosition, direction);
         }
 
         /// <summary>
@@ -239,6 +246,54 @@ namespace Vestige.Engine.Core
         }
 
         /// <summary>
+        /// Loads speech dialogue from file.
+        /// </summary>
+        private void LoadDialogue()
+        {
+            List<DialogPart> parsedMessages = new List<DialogPart>();
+            const string filename = "Content/Dialogue/test.xml"; // Fixme
+
+            XDocument document;
+            try
+            {
+                document = XDocument.Load(filename);
+            }
+            catch (Exception exception)
+            {
+                Console.WriteLine("Could not load dialogue: {0} thrown.\n{1}", exception.GetType(), exception.Message);
+                return;
+            }
+
+            var parts = document.Root.Elements("Part");
+            foreach (var partElement in parts)
+            {
+                var messageElement = partElement.Element("Message");
+                if (messageElement == null)
+                {
+                    continue;
+                }
+
+                var characterLeftDirection = ParseDirectionFromElement(partElement.Element("CharacterLeft"));
+                var characterRightDirection = ParseDirectionFromElement(partElement.Element("CharacterRight"));
+                var bubbleDirection = ParseDirectionFromElement(partElement.Element("Bubble"));
+
+                parsedMessages.Add(new DialogPart(messageElement.Value, bubbleDirection, characterLeftDirection, characterRightDirection));
+            }
+
+            messages = parsedMessages.ToArray();
+        }
+
+        private DialogDirection ParseDirectionFromElement(XElement element)
+        {
+            if (element == null)
+            {
+                return DialogDirection.None;
+            }
+
+            return Enum.TryParse(element.Value, out DialogDirection parsedValue) ? parsedValue : DialogDirection.None;
+        }
+
+        /// <summary>
         /// Calculates the string to display based on the drawable area.
         /// </summary>
         /// <param name="part"></param>
@@ -247,17 +302,6 @@ namespace Vestige.Engine.Core
         {
             // todo - calc drawable area, control widths of strings based upon SpriteFont.MeasureString
             return part.MessageText;
-        }
-
-        /// <summary>
-        /// Called to control the system behaviour when the animation is finished.
-        /// </summary>
-        private void OnAnimationFinished()
-        {
-            if (currentMessageIndex == messages.Length - 1)
-            {
-                isShown = false;
-            }
         }
     }
 }

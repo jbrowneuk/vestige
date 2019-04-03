@@ -20,7 +20,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)Core\SpeechSystem.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="$(MSBuildThisFileDirectory)Content\" />
     <Folder Include="$(MSBuildThisFileDirectory)Input\" />
     <Folder Include="$(MSBuildThisFileDirectory)Content\Images\" />
     <Folder Include="$(MSBuildThisFileDirectory)Content\Maps\" />
@@ -29,6 +28,9 @@
     <MonoGameContentReference Include="$(MSBuildThisFileDirectory)Content\Content.mgcb" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="$(MSBuildThisFileDirectory)Content\Dialogue\test.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="$(MSBuildThisFileDirectory)Content\Maps\town1.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
