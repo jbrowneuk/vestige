@@ -9,20 +9,21 @@
     <Import_RootNamespace>Vestige.Engine</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="$(MSBuildThisFileDirectory)Core\DialogDirection.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Core\DialogPart.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)GameRunner.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Input\KeyboardHandler.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\OverworldObject.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\AnimatedObject.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\TileSystem.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\Overworld.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Core\SpeechSystem.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Dialogue\DialogueSystem.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Dialogue\DialoguePart.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Dialogue\DialogueDirection.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="$(MSBuildThisFileDirectory)Input\" />
     <Folder Include="$(MSBuildThisFileDirectory)Content\Images\" />
     <Folder Include="$(MSBuildThisFileDirectory)Content\Maps\" />
+    <Folder Include="$(MSBuildThisFileDirectory)Dialogue\" />
   </ItemGroup>
   <ItemGroup>
     <MonoGameContentReference Include="$(MSBuildThisFileDirectory)Content\Content.mgcb" />
