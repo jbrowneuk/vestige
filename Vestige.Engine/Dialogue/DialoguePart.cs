@@ -1,26 +1,35 @@
 ﻿namespace Vestige.Engine.Dialogue
 {
     /// <summary>
+    /// Base interface for all dialogue section elements.
+    /// </summary>
+    internal interface IDialoguePart
+    {
+        DialogueDirection BubbleDirection { get; }
+        DialogueDirection LeftCharacterDirection { get; }
+        DialogueDirection RightCharacterDirection { get; }
+    }
+
+    /// <summary>
     /// Used to control a segment of a speech dialog conversation in the <see cref="DialogueSystem"/>.
     /// </summary>
-    /// <seealso cref="DialogueDirection"/>
-    internal class DialoguePart
+    internal class TextDialoguePart : IDialoguePart
     {
-        public string MessageText { get; private set; }
-        public DialogueDirection Direction { get; private set; }
+        public DialogueDirection BubbleDirection { get; private set; }
         public DialogueDirection LeftCharacterDirection { get; private set; }
         public DialogueDirection RightCharacterDirection { get; private set; }
+        public string MessageText { get; private set; }
 
-        internal DialoguePart(
-            string message,
-            DialogueDirection dir,
+        internal TextDialoguePart(
+            DialogueDirection bubble,
             DialogueDirection leftChar,
-            DialogueDirection rightChar)
+            DialogueDirection rightChar,
+            string message)
         {
-            MessageText = message;
-            Direction = dir;
+            BubbleDirection = bubble;
             LeftCharacterDirection = leftChar;
             RightCharacterDirection = rightChar;
+            MessageText = message;
         }
     }
 }

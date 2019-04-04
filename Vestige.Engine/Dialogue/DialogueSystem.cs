@@ -19,8 +19,8 @@ namespace Vestige.Engine.Dialogue
         private readonly Color shadeColor;
 
         // Variables to control dialog
-        private DialoguePart[] messages;
-        private DialoguePart currentDialogPart;
+        private IDialoguePart[] messages;
+        private IDialoguePart currentDialogPart;
         private int currentMessageIndex;
         private string displayText;
 
@@ -78,10 +78,8 @@ namespace Vestige.Engine.Dialogue
             LoadDialogue();
 
             // Reset control variables
-            // Todo: this is duplicated; refactor required
             currentMessageIndex = 0;
-            currentDialogPart = messages[currentMessageIndex];
-            displayText = CalculateFormattedText(currentDialogPart);
+            CalculateDialogueText();
 
             // Show visual area
             isShown = true;
@@ -104,8 +102,7 @@ namespace Vestige.Engine.Dialogue
             if (currentMessageIndex < messages.Length - 1)
             {
                 currentMessageIndex += 1;
-                currentDialogPart = messages[currentMessageIndex];
-                displayText = CalculateFormattedText(currentDialogPart);
+                CalculateDialogueText();
             }
             else
             {
@@ -190,7 +187,7 @@ namespace Vestige.Engine.Dialogue
             DrawRightSideCharacter(spriteBatch, characterTop);
 
             // Text area
-            if (currentDialogPart.Direction != DialogueDirection.None)
+            if (currentDialogPart.BubbleDirection != DialogueDirection.None)
             {
                 DrawSpeechBubble(spriteBatch, drawableArea, yPosition);
             }
@@ -201,15 +198,24 @@ namespace Vestige.Engine.Dialogue
         /// </summary>
         private void DrawSpeechBubble(SpriteBatch spriteBatch, Rectangle drawableArea, float yPosition)
         {
+            DialogueDirection currentBubbleDirection = messages[currentMessageIndex].BubbleDirection;
+            if (currentBubbleDirection == DialogueDirection.None)
+            {
+                return;
+            }
+
             float centerY = yPosition + bubbleVerticalOffset + visualAreaHeight / 2;
             Vector2 drawCenter = new Vector2(drawableArea.Center.X, centerY + drawOffset * entryScalingFactor);
             Vector2 bubbleOffset = new Vector2(SpeechBubble.Width, SpeechBubble.Height) / 2;
-            SpriteEffects effects = messages[currentMessageIndex].Direction == DialogueDirection.Left ? SpriteEffects.None : SpriteEffects.FlipHorizontally;
+            SpriteEffects effects = currentBubbleDirection == DialogueDirection.Left ? SpriteEffects.None : SpriteEffects.FlipHorizontally;
             spriteBatch.Draw(SpeechBubble, drawCenter - bubbleOffset, null, Color.White, 0.0f, Vector2.Zero, 1f, effects, 0.0f);
 
-            Vector2 textCenter = Font.MeasureString(displayText) / 2;
-            Vector2 drawPosition = drawCenter - textCenter;
-            spriteBatch.DrawString(Font, displayText, drawPosition, Color.Black);
+            if (displayText.Length > 0)
+            {
+                Vector2 textCenter = Font.MeasureString(displayText) / 2;
+                Vector2 drawPosition = drawCenter - textCenter;
+                spriteBatch.DrawString(Font, displayText, drawPosition, Color.Black);
+            }
         }
 
         /// <summary>
@@ -250,7 +256,7 @@ namespace Vestige.Engine.Dialogue
         /// </summary>
         private void LoadDialogue()
         {
-            List<DialoguePart> parsedMessages = new List<DialoguePart>();
+            List<IDialoguePart> parsedMessages = new List<IDialoguePart>();
             const string filename = "Content/Dialogue/test.xml"; // Fixme
 
             XDocument document;
@@ -267,6 +273,7 @@ namespace Vestige.Engine.Dialogue
             var parts = document.Root.Elements("Part");
             foreach (var partElement in parts)
             {
+                // if part[type] == "message"…
                 var messageElement = partElement.Element("Message");
                 if (messageElement == null)
                 {
@@ -277,7 +284,7 @@ namespace Vestige.Engine.Dialogue
                 var characterRightDirection = ParseDirectionFromElement(partElement.Element("CharacterRight"));
                 var bubbleDirection = ParseDirectionFromElement(partElement.Element("Bubble"));
 
-                parsedMessages.Add(new DialoguePart(messageElement.Value, bubbleDirection, characterLeftDirection, characterRightDirection));
+                parsedMessages.Add(new TextDialoguePart(bubbleDirection, characterLeftDirection, characterRightDirection, messageElement.Value));
             }
 
             messages = parsedMessages.ToArray();
@@ -296,12 +303,18 @@ namespace Vestige.Engine.Dialogue
         /// <summary>
         /// Calculates the string to display based on the drawable area.
         /// </summary>
-        /// <param name="part"></param>
-        /// <returns></returns>
-        private string CalculateFormattedText(DialoguePart part)
+        private void CalculateDialogueText()
         {
-            // todo - calc drawable area, control widths of strings based upon SpriteFont.MeasureString
-            return part.MessageText;
+            currentDialogPart = messages[currentMessageIndex];
+            if (currentDialogPart.GetType() == typeof(TextDialoguePart))
+            {
+                // todo - calc drawable area, control widths of strings based upon SpriteFont.MeasureString
+                displayText = (currentDialogPart as TextDialoguePart).MessageText;
+            }
+            else
+            {
+                displayText = "";
+            }
         }
     }
 }
