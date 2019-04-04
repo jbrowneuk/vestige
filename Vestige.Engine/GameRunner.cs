@@ -2,6 +2,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Vestige.Engine.Core;
+using Vestige.Engine.Dialogue;
 using Vestige.Engine.Input;
 
 namespace Vestige.Engine
@@ -15,7 +16,7 @@ namespace Vestige.Engine
         private readonly OverworldObject player;
         private readonly AnimatedObject playerSprite;
         private readonly Overworld overworld;
-        private readonly DialogSystem speechSystem;
+        private readonly DialogueSystem speechSystem;
         private readonly GraphicsDeviceManager graphics;
 
         private SpriteBatch spriteBatch;
@@ -26,7 +27,7 @@ namespace Vestige.Engine
             Content.RootDirectory = "Content";
 
             keyboardHandler = new KeyboardHandler();
-            speechSystem = new DialogSystem();
+            speechSystem = new DialogueSystem();
 
             overworld = new Overworld();
             playerSprite = new AnimatedObject();

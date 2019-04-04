@@ -4,12 +4,12 @@ using System.Xml.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace Vestige.Engine.Core
+namespace Vestige.Engine.Dialogue
 {
     /// <summary>
-    /// Used to represent speech (dialog) in-game. Encapsulates the visuals and control of the conversation.
+    /// Used to represent speech (dialogue) in-game. Encapsulates the visuals and control of the conversation.
     /// </summary>
-    internal class DialogSystem
+    internal class DialogueSystem
     {
         private const int visualAreaHeight = 240;
         private const float moveAnimationSeconds = 0.5f;
@@ -19,8 +19,8 @@ namespace Vestige.Engine.Core
         private readonly Color shadeColor;
 
         // Variables to control dialog
-        private DialogPart[] messages;
-        private DialogPart currentDialogPart;
+        private DialoguePart[] messages;
+        private DialoguePart currentDialogPart;
         private int currentMessageIndex;
         private string displayText;
 
@@ -32,7 +32,7 @@ namespace Vestige.Engine.Core
         private float drawOffset;
         private float blackoutScale;
 
-        internal DialogSystem()
+        internal DialogueSystem()
         {
             isShown = false;
             isAnimating = false;
@@ -190,7 +190,7 @@ namespace Vestige.Engine.Core
             DrawRightSideCharacter(spriteBatch, characterTop);
 
             // Text area
-            if (currentDialogPart.Direction != DialogDirection.None)
+            if (currentDialogPart.Direction != DialogueDirection.None)
             {
                 DrawSpeechBubble(spriteBatch, drawableArea, yPosition);
             }
@@ -204,7 +204,7 @@ namespace Vestige.Engine.Core
             float centerY = yPosition + bubbleVerticalOffset + visualAreaHeight / 2;
             Vector2 drawCenter = new Vector2(drawableArea.Center.X, centerY + drawOffset * entryScalingFactor);
             Vector2 bubbleOffset = new Vector2(SpeechBubble.Width, SpeechBubble.Height) / 2;
-            SpriteEffects effects = messages[currentMessageIndex].Direction == DialogDirection.Left ? SpriteEffects.None : SpriteEffects.FlipHorizontally;
+            SpriteEffects effects = messages[currentMessageIndex].Direction == DialogueDirection.Left ? SpriteEffects.None : SpriteEffects.FlipHorizontally;
             spriteBatch.Draw(SpeechBubble, drawCenter - bubbleOffset, null, Color.White, 0.0f, Vector2.Zero, 1f, effects, 0.0f);
 
             Vector2 textCenter = Font.MeasureString(displayText) / 2;
@@ -217,7 +217,7 @@ namespace Vestige.Engine.Core
         /// </summary>
         private void DrawLeftSideCharacter(SpriteBatch spriteBatch, float yPosition)
         {
-            DialogDirection direction = currentDialogPart.LeftCharacterDirection;
+            DialogueDirection direction = currentDialogPart.LeftCharacterDirection;
             DrawCharacter(spriteBatch, (int)-drawOffset, yPosition, direction);
         }
 
@@ -226,22 +226,22 @@ namespace Vestige.Engine.Core
         /// </summary>
         private void DrawRightSideCharacter(SpriteBatch spriteBatch, float yPosition)
         {
-            DialogDirection direction = currentDialogPart.RightCharacterDirection;
+            DialogueDirection direction = currentDialogPart.RightCharacterDirection;
             DrawCharacter(spriteBatch, Viewport.Right - DebugCharacter.Width + (int)drawOffset, yPosition, direction);
         }
 
         /// <summary>
         /// Draws a character graphic at a specified position.
         /// </summary>
-        private void DrawCharacter(SpriteBatch spriteBatch, int xPosition, float yPosition, DialogDirection direction)
+        private void DrawCharacter(SpriteBatch spriteBatch, int xPosition, float yPosition, DialogueDirection direction)
         {
-            if (direction == DialogDirection.None)
+            if (direction == DialogueDirection.None)
             {
                 return;
             }
 
             Vector2 characterPos = new Vector2(xPosition, yPosition);
-            SpriteEffects flip = direction == DialogDirection.Left ? SpriteEffects.None : SpriteEffects.FlipHorizontally;
+            SpriteEffects flip = direction == DialogueDirection.Left ? SpriteEffects.None : SpriteEffects.FlipHorizontally;
             spriteBatch.Draw(DebugCharacter, characterPos, null, Color.White, 0f, Vector2.Zero, 1f, flip, 0);
         }
 
@@ -250,7 +250,7 @@ namespace Vestige.Engine.Core
         /// </summary>
         private void LoadDialogue()
         {
-            List<DialogPart> parsedMessages = new List<DialogPart>();
+            List<DialoguePart> parsedMessages = new List<DialoguePart>();
             const string filename = "Content/Dialogue/test.xml"; // Fixme
 
             XDocument document;
@@ -277,20 +277,20 @@ namespace Vestige.Engine.Core
                 var characterRightDirection = ParseDirectionFromElement(partElement.Element("CharacterRight"));
                 var bubbleDirection = ParseDirectionFromElement(partElement.Element("Bubble"));
 
-                parsedMessages.Add(new DialogPart(messageElement.Value, bubbleDirection, characterLeftDirection, characterRightDirection));
+                parsedMessages.Add(new DialoguePart(messageElement.Value, bubbleDirection, characterLeftDirection, characterRightDirection));
             }
 
             messages = parsedMessages.ToArray();
         }
 
-        private DialogDirection ParseDirectionFromElement(XElement element)
+        private DialogueDirection ParseDirectionFromElement(XElement element)
         {
             if (element == null)
             {
-                return DialogDirection.None;
+                return DialogueDirection.None;
             }
 
-            return Enum.TryParse(element.Value, out DialogDirection parsedValue) ? parsedValue : DialogDirection.None;
+            return Enum.TryParse(element.Value, out DialogueDirection parsedValue) ? parsedValue : DialogueDirection.None;
         }
 
         /// <summary>
@@ -298,7 +298,7 @@ namespace Vestige.Engine.Core
         /// </summary>
         /// <param name="part"></param>
         /// <returns></returns>
-        private string CalculateFormattedText(DialogPart part)
+        private string CalculateFormattedText(DialoguePart part)
         {
             // todo - calc drawable area, control widths of strings based upon SpriteFont.MeasureString
             return part.MessageText;
