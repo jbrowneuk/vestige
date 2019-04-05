@@ -1,4 +1,7 @@
-﻿namespace Vestige.Engine.Dialogue
+﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+
+namespace Vestige.Engine.Dialogue
 {
     /// <summary>
     /// Base interface for all dialogue section elements.
@@ -8,6 +11,7 @@
         DialogueDirection BubbleDirection { get; }
         DialogueDirection LeftCharacterDirection { get; }
         DialogueDirection RightCharacterDirection { get; }
+        void Draw(SpriteBatch spriteBatch, SpriteFont font, Vector2 drawCenter);
     }
 
     /// <summary>
@@ -30,6 +34,13 @@
             LeftCharacterDirection = leftChar;
             RightCharacterDirection = rightChar;
             MessageText = message;
+        }
+
+        public void Draw(SpriteBatch spriteBatch, SpriteFont font, Vector2 drawCenter)
+        {
+            Vector2 textCenter = font.MeasureString(MessageText) / 2;
+            Vector2 drawPosition = drawCenter - textCenter;
+            spriteBatch.DrawString(font, MessageText, drawPosition, Color.Black);
         }
     }
 }
