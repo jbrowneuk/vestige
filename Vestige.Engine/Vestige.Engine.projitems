@@ -18,6 +18,8 @@
     <Compile Include="$(MSBuildThisFileDirectory)Dialogue\DialogueSystem.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Dialogue\DialoguePart.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Dialogue\DialogueDirection.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Dialogue\InputDialoguePart.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Dialogue\TextDialoguePart.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="$(MSBuildThisFileDirectory)Input\" />

@@ -19,8 +19,8 @@ namespace Vestige.Engine.Dialogue
         private readonly Color shadeColor;
 
         // Variables to control dialog
-        private IDialoguePart[] messages;
-        private IDialoguePart currentDialogPart;
+        private DialoguePart[] messages;
+        private DialoguePart currentDialogPart;
         private int currentMessageIndex;
 
         // Variables to control visuals
@@ -247,7 +247,7 @@ namespace Vestige.Engine.Dialogue
         /// </summary>
         private void LoadDialogue()
         {
-            List<IDialoguePart> parsedMessages = new List<IDialoguePart>();
+            List<DialoguePart> parsedMessages = new List<DialoguePart>();
             const string filename = "Content/Dialogue/test.xml"; // Fixme
 
             XDocument document;

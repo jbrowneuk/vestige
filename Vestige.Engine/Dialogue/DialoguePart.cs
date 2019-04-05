@@ -4,43 +4,49 @@ using Microsoft.Xna.Framework.Graphics;
 namespace Vestige.Engine.Dialogue
 {
     /// <summary>
-    /// Base interface for all dialogue section elements.
+    /// Base class for all dialogue section elements.
     /// </summary>
-    internal interface IDialoguePart
+    internal abstract class DialoguePart
     {
-        DialogueDirection BubbleDirection { get; }
-        DialogueDirection LeftCharacterDirection { get; }
-        DialogueDirection RightCharacterDirection { get; }
-        void Draw(SpriteBatch spriteBatch, SpriteFont font, Vector2 drawCenter);
-    }
-
-    /// <summary>
-    /// Used to control a segment of a speech dialog conversation in the <see cref="DialogueSystem"/>.
-    /// </summary>
-    internal class TextDialoguePart : IDialoguePart
-    {
-        public DialogueDirection BubbleDirection { get; private set; }
-        public DialogueDirection LeftCharacterDirection { get; private set; }
-        public DialogueDirection RightCharacterDirection { get; private set; }
-        public string MessageText { get; private set; }
-
-        internal TextDialoguePart(
-            DialogueDirection bubble,
+        internal DialoguePart(DialogueDirection bubble,
             DialogueDirection leftChar,
-            DialogueDirection rightChar,
-            string message)
+            DialogueDirection rightChar)
         {
             BubbleDirection = bubble;
             LeftCharacterDirection = leftChar;
             RightCharacterDirection = rightChar;
-            MessageText = message;
         }
 
-        public void Draw(SpriteBatch spriteBatch, SpriteFont font, Vector2 drawCenter)
+        /// <summary>Direction of the speech bubble.</summary>
+        internal DialogueDirection BubbleDirection { get; set; }
+
+        /// <summary>Direction of the left character.</summary>
+        internal DialogueDirection LeftCharacterDirection { get; set; }
+
+        /// <summary>Direction of the Right character.</summary>
+        internal DialogueDirection RightCharacterDirection { get; set; }
+
+        /// <summary>
+        /// Draws this dialogue part’s text.
+        /// </summary>
+        /// <param name="spriteBatch">Activated SpriteBatch</param>
+        /// <param name="font">Font to use</param>
+        /// <param name="drawCenter">Center of drawable area</param>
+        internal abstract void Draw(SpriteBatch spriteBatch, SpriteFont font, Vector2 drawCenter);
+
+        /// <summary>
+        /// Used to draw a string of text using the specified position as the center. Rounds drawing position to integer.
+        /// </summary>
+        /// <param name="spriteBatch">Activated SpriteBatch</param>
+        /// <param name="font">Font to use</param>
+        /// <param name="text">Text to draw</param>
+        /// <param name="position">Position of the center of text</param>
+        /// <param name="textColor">Color of text</param>
+        protected void DrawTextLine(SpriteBatch spriteBatch, SpriteFont font, string text, Vector2 position, Color textColor)
         {
-            Vector2 textCenter = font.MeasureString(MessageText) / 2;
-            Vector2 drawPosition = drawCenter - textCenter;
-            spriteBatch.DrawString(font, MessageText, drawPosition, Color.Black);
+            Vector2 textOffset = font.MeasureString(text) / 2;
+            Vector2 textPosition = new Vector2((int)(position.X - textOffset.X), (int)(position.Y - textOffset.Y));
+            spriteBatch.DrawString(font, text, textPosition, textColor);
         }
     }
 }
