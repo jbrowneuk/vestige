@@ -71,6 +71,9 @@ namespace Vestige.Engine
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Update(GameTime gameTime)
         {
+            Keys keyMoveUp = Keys.Up;
+            Keys keyMoveDown = Keys.Down;
+
             keyboardHandler.Update();
 
             if (keyboardHandler.IsKeyDown(Keys.Escape))
@@ -83,7 +86,7 @@ namespace Vestige.Engine
             {
                 keyboardMovement.X = keyboardHandler.IsKeyDown(Keys.Right) ? 1 : -1;
             }
-            else if (keyboardHandler.IsKeyDown(Keys.Up) || keyboardHandler.IsKeyDown(Keys.Down))
+            else if (keyboardHandler.IsKeyDown(keyMoveUp) || keyboardHandler.IsKeyDown(keyMoveDown))
             {
                 keyboardMovement.Y = keyboardHandler.IsKeyDown(Keys.Up) ? -1 : 1;
             }
@@ -124,6 +127,16 @@ namespace Vestige.Engine
             if (keyboardHandler.WasKeyJustPressed(Keys.Enter))
             {
                 speechSystem.ShowText();
+            }
+
+            if (keyboardHandler.WasKeyJustPressed(keyMoveUp))
+            {
+                speechSystem.HandleMoveUpInteraction();
+            }
+
+            if (keyboardHandler.WasKeyJustPressed(keyMoveDown))
+            {
+                speechSystem.HandleMoveDownInteraction();
             }
 
             base.Update(gameTime);

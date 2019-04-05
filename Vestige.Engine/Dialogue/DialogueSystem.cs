@@ -109,6 +109,22 @@ namespace Vestige.Engine.Dialogue
             }
         }
 
+        internal void HandleMoveUpInteraction()
+        {
+            if (currentDialogPart is InputDialoguePart interactiveDialogPart)
+            {
+                interactiveDialogPart.SelectPreviousOption();
+            }
+        }
+
+        internal void HandleMoveDownInteraction()
+        {
+            if (currentDialogPart is InputDialoguePart interactiveDialogPart)
+            {
+                interactiveDialogPart.SelectNextOption();
+            }
+        }
+
         /// <summary>
         /// Used to update the current internal state of the system.
         /// </summary>
