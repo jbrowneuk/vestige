@@ -81,6 +81,7 @@ namespace Vestige.Engine
                 Exit();
             }
 
+            // Get movement for player
             Vector2 keyboardMovement = Vector2.Zero;
             if (keyboardHandler.IsKeyDown(Keys.Right) || keyboardHandler.IsKeyDown(Keys.Left))
             {
@@ -95,8 +96,6 @@ namespace Vestige.Engine
             {
                 player.Move(keyboardMovement);
             }
-
-            player.Update(gameTime);
 
             // TODO make this sensible and the class use more vars
             if (keyboardMovement.X < 0)
@@ -115,7 +114,12 @@ namespace Vestige.Engine
             {
                 playerSprite.FrameOffset = 0;
             }
-            playerSprite.Update(gameTime);
+
+            if (!speechSystem.IsShown)
+            {
+                player.Update(gameTime);
+                playerSprite.Update(gameTime);
+            }
 
             // Speech system
             speechSystem.Update(gameTime);

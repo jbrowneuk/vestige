@@ -24,7 +24,6 @@ namespace Vestige.Engine.Dialogue
         private int currentMessageIndex;
 
         // Variables to control visuals
-        private bool isShown;
         private bool isAnimating;
         private bool isUp;
         private float animationOffset;
@@ -33,7 +32,7 @@ namespace Vestige.Engine.Dialogue
 
         internal DialogueSystem()
         {
-            isShown = false;
+            IsShown = false;
             isAnimating = false;
             isUp = false;
             shadeColor = new Color(Color.Black, 0.5f);
@@ -65,11 +64,16 @@ namespace Vestige.Engine.Dialogue
         internal Rectangle Viewport { get; set; }
 
         /// <summary>
+        /// Gets whether the speech system is on screen.
+        /// </summary>
+        internal bool IsShown { get; private set; }
+
+        /// <summary>
         /// Initialises a dialog and shows the system.
         /// </summary>
         internal void ShowText()
         {
-            if (isShown)
+            if (IsShown)
             {
                 return;
             }
@@ -81,7 +85,7 @@ namespace Vestige.Engine.Dialogue
             currentDialogPart = messages[currentMessageIndex];
 
             // Show visual area
-            isShown = true;
+            IsShown = true;
             isAnimating = true;
             animationOffset = 0;
             drawOffset = visualAreaHeight;
@@ -93,7 +97,7 @@ namespace Vestige.Engine.Dialogue
         /// </summary>
         internal void AdvanceText()
         {
-            if (!isShown || isAnimating)
+            if (!IsShown || isAnimating)
             {
                 return;
             }
@@ -131,7 +135,7 @@ namespace Vestige.Engine.Dialogue
         /// <param name="gameTime">Current GameTime value from game runner</param>
         internal void Update(GameTime gameTime)
         {
-            if (!isShown)
+            if (!IsShown)
             {
                 return;
             }
@@ -166,7 +170,7 @@ namespace Vestige.Engine.Dialogue
                     {
                         // Clear state
                         messages = null;
-                        isShown = false;
+                        IsShown = false;
                     }
                 }
 
@@ -183,7 +187,7 @@ namespace Vestige.Engine.Dialogue
         /// <param name="spriteBatch">Activated <see cref="SpriteBatch"/></param>
         internal void Draw(SpriteBatch spriteBatch)
         {
-            if (!isShown)
+            if (!IsShown)
             {
                 return;
             }
