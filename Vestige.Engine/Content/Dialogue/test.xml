@@ -6,4 +6,10 @@
         <Bubble>Left</Bubble>
         <Message>Single Item Message</Message>
     </Part>
+    <Part Type="Choice">
+        <Options>
+            <Option>Option 1</Option>
+            <Option>Option 2</Option>
+        </Options>
+    </Part>
 </Dialogue>

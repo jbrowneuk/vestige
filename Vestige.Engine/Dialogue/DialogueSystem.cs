@@ -280,24 +280,76 @@ namespace Vestige.Engine.Dialogue
             var parts = document.Root.Elements("Part");
             foreach (var partElement in parts)
             {
-                // if part[type] == "message"…
-                var messageElement = partElement.Element("Message");
-                if (messageElement == null)
+                // Todo: this should not be string-based
+                DialoguePart parsedPart = null;
+                string partType = "Message";
+                var typeAttribute = partElement.Attribute("Type");
+                if (typeAttribute != null)
                 {
-                    continue;
+                    partType = typeAttribute.Value;
                 }
 
-                var characterLeftDirection = ParseDirectionFromElement(partElement.Element("CharacterLeft"));
-                var characterRightDirection = ParseDirectionFromElement(partElement.Element("CharacterRight"));
-                var bubbleDirection = ParseDirectionFromElement(partElement.Element("Bubble"));
+                switch (partType)
+                {
+                    case "Choice":
+                        parsedPart = ParseInputDialogPart(partElement);
+                        break;
 
-                parsedMessages.Add(new TextDialoguePart(bubbleDirection, characterLeftDirection, characterRightDirection, messageElement.Value));
+                    default:
+                        parsedPart = ParseTextDialogPart(partElement);
+                        break;
+                }
+
+                if (parsedPart != null)
+                {
+                    parsedMessages.Add(parsedPart);
+                }
             }
 
-            string[] choices = { "option a", "option b", "option c" };
-            parsedMessages.Add(new InputDialoguePart(DialogueDirection.Left, DialogueDirection.Right, DialogueDirection.None, choices));
-
             messages = parsedMessages.ToArray();
+        }
+
+        /// <summary>
+        /// Used to parse a standard message dialogue element.
+        /// </summary>
+        /// <param name="partElement">The relevant XML element containing data</param>
+        /// <returns>The parsed element, or null if not possible</returns>
+        private DialoguePart ParseTextDialogPart(XElement partElement)
+        {
+            var messageElement = partElement.Element("Message");
+            if (messageElement == null)
+            {
+                return null;
+            }
+
+            var characterLeftDirection = ParseDirectionFromElement(partElement.Element("CharacterLeft"));
+            var characterRightDirection = ParseDirectionFromElement(partElement.Element("CharacterRight"));
+            var bubbleDirection = ParseDirectionFromElement(partElement.Element("Bubble"));
+
+            return new TextDialoguePart(bubbleDirection, characterLeftDirection, characterRightDirection, messageElement.Value);
+        }
+
+        /// <summary>
+        /// Used to parse a multiple choice dialogue element.
+        /// </summary>
+        /// <param name="partElement">The relevant XML element containing data</param>
+        /// <returns>The parsed element, or null if not possible</returns>
+        private DialoguePart ParseInputDialogPart(XElement partElement)
+        {
+            var optionsContainerElement = partElement.Element("Options");
+            if (optionsContainerElement == null)
+            {
+                return null;
+            }
+
+            List<string> choices = new List<string>();
+            var optionElements = optionsContainerElement.Elements("Option");
+            foreach (var optionElement in optionElements)
+            {
+                choices.Add(optionElement.Value);
+            }
+
+            return new InputDialoguePart(DialogueDirection.Left, DialogueDirection.Right, DialogueDirection.None, choices);
         }
 
         private DialogueDirection ParseDirectionFromElement(XElement element)

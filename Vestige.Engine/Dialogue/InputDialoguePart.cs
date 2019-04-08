@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System.Collections.Generic;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace Vestige.Engine.Dialogue
@@ -8,14 +9,14 @@ namespace Vestige.Engine.Dialogue
     /// </summary>
     internal class InputDialoguePart : DialoguePart
     {
-        private readonly string[] options;
+        private readonly List<string> options;
         private int selectedOption;
 
         internal InputDialoguePart(
             DialogueDirection bubble,
             DialogueDirection leftChar,
             DialogueDirection rightChar,
-            string[] choices) : base(bubble, leftChar, rightChar)
+            List<string> choices) : base(bubble, leftChar, rightChar)
         {
             options = choices;
             selectedOption = 0;
@@ -24,9 +25,9 @@ namespace Vestige.Engine.Dialogue
         internal override void Draw(SpriteBatch spriteBatch, SpriteFont font, Vector2 drawCenter)
         {
             int fontHeight = (int)font.MeasureString("dp").Y;
-            Vector2 topLine = drawCenter - new Vector2(0, (fontHeight * options.Length) / 2 - fontHeight / 2); // Move central line point down
+            Vector2 topLine = drawCenter - new Vector2(0, (fontHeight * options.Count) / 2 - fontHeight / 2); // Move central line point down
 
-            for (int index = 0; index < options.Length; index++)
+            for (int index = 0; index < options.Count; index++)
             {
                 string option = options[index];
 
@@ -43,12 +44,12 @@ namespace Vestige.Engine.Dialogue
 
         internal void SelectPreviousOption()
         {
-            selectedOption = selectedOption > 0 ? selectedOption - 1 : options.Length - 1;
+            selectedOption = selectedOption > 0 ? selectedOption - 1 : options.Count - 1;
         }
 
         internal void SelectNextOption()
         {
-            selectedOption = (selectedOption + 1) % options.Length;
+            selectedOption = (selectedOption + 1) % options.Count;
         }
     }
 }
