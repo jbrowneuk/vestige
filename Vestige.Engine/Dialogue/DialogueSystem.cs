@@ -203,6 +203,7 @@ namespace Vestige.Engine.Dialogue
 
             // Text area
             DrawSpeechBubble(spriteBatch, drawableArea, yPosition);
+            DrawIndicator(spriteBatch);
         }
 
         /// <summary>
@@ -256,6 +257,23 @@ namespace Vestige.Engine.Dialogue
             Vector2 characterPos = new Vector2(xPosition, yPosition);
             SpriteEffects flip = direction == DialogueDirection.Left ? SpriteEffects.None : SpriteEffects.FlipHorizontally;
             spriteBatch.Draw(DebugCharacter, characterPos, null, Color.White, 0f, Vector2.Zero, 1f, flip, 0);
+        }
+
+        /// <summary>
+        /// Draws the indicator to advance the conversation.
+        /// </summary>
+        /// <param name="spriteBatch">Activated SpriteBatch</param>
+        private void DrawIndicator(SpriteBatch spriteBatch)
+        {
+            string advanceMessage = currentMessageIndex < messages.Length - 1 ? "Next" : "End";
+            Vector2 stringDimensions = Font.MeasureString(advanceMessage);
+            Vector2 drawOrigin = new Vector2(Viewport.Width / 2, Viewport.Height);
+
+            Rectangle backgroundRectangle = new Rectangle((int)(drawOrigin.X - stringDimensions.X / 2), (int)(drawOrigin.Y - stringDimensions.Y), (int)stringDimensions.X, (int)stringDimensions.Y);
+            spriteBatch.Draw(BlankTexture, backgroundRectangle, Color.White);
+
+            Vector2 position = drawOrigin - new Vector2(stringDimensions.X / 2, stringDimensions.Y);
+            spriteBatch.DrawString(Font, advanceMessage, position, Color.Black);
         }
 
         /// <summary>
