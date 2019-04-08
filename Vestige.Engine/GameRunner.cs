@@ -2,6 +2,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Vestige.Engine.Core;
+using Vestige.Engine.Dialogue;
 using Vestige.Engine.Input;
 
 namespace Vestige.Engine
@@ -15,7 +16,7 @@ namespace Vestige.Engine
         private readonly OverworldObject player;
         private readonly AnimatedObject playerSprite;
         private readonly Overworld overworld;
-        private readonly DialogSystem speechSystem;
+        private readonly DialogueSystem speechSystem;
         private readonly GraphicsDeviceManager graphics;
 
         private SpriteBatch spriteBatch;
@@ -26,7 +27,7 @@ namespace Vestige.Engine
             Content.RootDirectory = "Content";
 
             keyboardHandler = new KeyboardHandler();
-            speechSystem = new DialogSystem();
+            speechSystem = new DialogueSystem();
 
             overworld = new Overworld();
             playerSprite = new AnimatedObject();
@@ -70,6 +71,9 @@ namespace Vestige.Engine
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Update(GameTime gameTime)
         {
+            Keys keyMoveUp = Keys.Up;
+            Keys keyMoveDown = Keys.Down;
+
             keyboardHandler.Update();
 
             if (keyboardHandler.IsKeyDown(Keys.Escape))
@@ -77,12 +81,13 @@ namespace Vestige.Engine
                 Exit();
             }
 
+            // Get movement for player
             Vector2 keyboardMovement = Vector2.Zero;
             if (keyboardHandler.IsKeyDown(Keys.Right) || keyboardHandler.IsKeyDown(Keys.Left))
             {
                 keyboardMovement.X = keyboardHandler.IsKeyDown(Keys.Right) ? 1 : -1;
             }
-            else if (keyboardHandler.IsKeyDown(Keys.Up) || keyboardHandler.IsKeyDown(Keys.Down))
+            else if (keyboardHandler.IsKeyDown(keyMoveUp) || keyboardHandler.IsKeyDown(keyMoveDown))
             {
                 keyboardMovement.Y = keyboardHandler.IsKeyDown(Keys.Up) ? -1 : 1;
             }
@@ -91,8 +96,6 @@ namespace Vestige.Engine
             {
                 player.Move(keyboardMovement);
             }
-
-            player.Update(gameTime);
 
             // TODO make this sensible and the class use more vars
             if (keyboardMovement.X < 0)
@@ -111,7 +114,12 @@ namespace Vestige.Engine
             {
                 playerSprite.FrameOffset = 0;
             }
-            playerSprite.Update(gameTime);
+
+            if (!speechSystem.IsShown)
+            {
+                player.Update(gameTime);
+                playerSprite.Update(gameTime);
+            }
 
             // Speech system
             speechSystem.Update(gameTime);
@@ -123,6 +131,16 @@ namespace Vestige.Engine
             if (keyboardHandler.WasKeyJustPressed(Keys.Enter))
             {
                 speechSystem.ShowText();
+            }
+
+            if (keyboardHandler.WasKeyJustPressed(keyMoveUp))
+            {
+                speechSystem.HandleMoveUpInteraction();
+            }
+
+            if (keyboardHandler.WasKeyJustPressed(keyMoveDown))
+            {
+                speechSystem.HandleMoveDownInteraction();
             }
 
             base.Update(gameTime);

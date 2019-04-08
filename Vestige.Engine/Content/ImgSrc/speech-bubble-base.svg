@@ -14,7 +14,7 @@
    viewBox="0 0 400 240"
    version="1.1"
    id="svg8"
-   inkscape:version="0.92.2 5c3e80d, 2017-08-06"
+   inkscape:version="0.92.4 (5da689c313, 2019-01-14)"
    sodipodi:docname="speech-bubble-base.svg"
    inkscape:export-filename="../Images/speechBubble.png"
    inkscape:export-xdpi="96"
@@ -29,8 +29,8 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="1"
-     inkscape:cx="-178.5"
-     inkscape:cy="112"
+     inkscape:cx="200"
+     inkscape:cy="120"
      inkscape:document-units="px"
      inkscape:current-layer="svg8"
      showgrid="false"
@@ -52,7 +52,7 @@
   </metadata>
   <path
      style="opacity:1;vector-effect:none;fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:2;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
-     d="M 200,26.66213 A 184.55487,93.338097 0 0 0 15.44531,120.00007 184.55487,93.338097 0 0 0 200,213.33787 a 184.55487,93.338097 0 0 0 89.92188,-11.955 c 21.34011,7.1855 50.95868,12.1166 82.83398,1.1406 -17.13237,-3.8745 -30.43278,-10.3207 -40.02539,-17.8184 a 184.55487,93.338097 0 0 0 51.82422,-64.705 A 184.55487,93.338097 0 0 0 200,26.66213 Z"
+     d="M 200,26.66213 A 184.55487,93.338097 0 0 1 384.55469,120.00007 184.55487,93.338097 0 0 1 200,213.33787 a 184.55487,93.338097 0 0 1 -89.92188,-11.955 c -21.34011,7.1855 -50.95868,12.1166 -82.83398,1.1406 17.13237,-3.8745 30.43278,-10.3207 40.02539,-17.8184 A 184.55487,93.338097 0 0 1 15.44531,120.00007 184.55487,93.338097 0 0 1 200,26.66213 Z"
      id="path3806"
      inkscape:connector-curvature="0" />
 </svg>
