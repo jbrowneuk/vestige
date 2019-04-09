@@ -7,8 +7,16 @@ using Vestige.Engine.Input;
 
 namespace Vestige.Engine
 {
+    internal enum EditorMode
+    {
+        Info,
+        AddTile
+    }
+
     public class EditorRunner : Game
     {
+        const int sidebarWidth = 320;
+
         private readonly KeyboardHandler keyboardHandler;
         private readonly MouseHandler mouseHandler;
         private readonly Overworld overworld;
@@ -19,6 +27,7 @@ namespace Vestige.Engine
         private SpriteFont mainFont;
         private Point selection;
         private string selectedTileInfo;
+        private EditorMode mode;
 
         public EditorRunner()
         {
@@ -28,6 +37,8 @@ namespace Vestige.Engine
             keyboardHandler = new KeyboardHandler();
             mouseHandler = new MouseHandler();
             overworld = new Overworld();
+
+            mode = EditorMode.Info;
         }
 
         protected override void Initialize()
@@ -84,17 +95,61 @@ namespace Vestige.Engine
                 Exit();
             }
 
+            if (keyboardHandler.WasKeyJustPressed(Keys.Space))
+            {
+                mode = mode == EditorMode.Info ? EditorMode.AddTile : EditorMode.Info;
+            }
+
             mouseHandler.Update();
             if (mouseHandler.WasButtonJustPressed(MouseButton.Left))
             {
                 Point clickLocation = mouseHandler.CurrentPosition;
-                Point gridLocation = new Point(clickLocation.X / Constants.TileSize, clickLocation.Y / Constants.TileSize);
-                if (gridLocation.X >= 0 && gridLocation.X < overworld.WorldWidth && gridLocation.Y >= 0 || gridLocation.Y < overworld.WorldHeight)
+                if (clickLocation.X > graphics.GraphicsDevice.Viewport.Width - sidebarWidth)
                 {
-                    selection = gridLocation;
-                    selectedTileInfo =string.Format("Selected tile ID is {0}", overworld.DemoBelowPlayer.GetTileId(gridLocation)); ;
+                    HandleSidebarClick(clickLocation);
+                }
+                else
+                {
+                    HandleEditorAreaClick(clickLocation);
                 }
             }
+        }
+
+        private void HandleSidebarClick(Point clickLocation)
+        {
+            selectedTileInfo = @"Clicked on sidebar";
+        }
+
+        private void HandleEditorAreaClick(Point clickLocation)
+        {
+            Point gridLocation = new Point(clickLocation.X / Constants.TileSize, clickLocation.Y / Constants.TileSize);
+
+            if (gridLocation.X >= 0 && gridLocation.X < overworld.WorldWidth && gridLocation.Y >= 0 || gridLocation.Y < overworld.WorldHeight)
+            {
+                selection = gridLocation;
+
+                switch (mode)
+                {
+                    case EditorMode.Info:
+                        HandleInfoModeClick(gridLocation);
+                        break;
+
+                    case EditorMode.AddTile:
+                        HandleAddTileModeClick(gridLocation);
+                        break;
+                }
+            }
+        }
+
+        private void HandleInfoModeClick(Point gridLocation)
+        {
+            selectedTileInfo = string.Format("Selected tile ID is {0}", overworld.DemoBelowPlayer.GetTileId(gridLocation));
+        }
+
+        private void HandleAddTileModeClick(Point gridLocation)
+        {
+            const int tileId = 0;
+            overworld.DemoBelowPlayer.AddTile(gridLocation.X, gridLocation.Y, tileId);
         }
 
         private void RenderGrid(SpriteBatch spriteBatch)
@@ -124,7 +179,6 @@ namespace Vestige.Engine
 
         private void RenderSidebar(SpriteBatch spriteBatch)
         {
-            const int sidebarWidth = 320;
             Rectangle screenBounds = graphics.GraphicsDevice.Viewport.Bounds;
             Rectangle sideBarArea = new Rectangle(screenBounds.Width - sidebarWidth, 0, 1, screenBounds.Height); // Dividing line only currently
             spriteBatch.Draw(blankSquare, sideBarArea, Color.Gray);
